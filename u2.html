@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit II · Forex Markets and Exchange Rate Theories</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF0EC;--surface:#F8FBF9;--surface2:#EFF5F1;--ink:#12261F;--muted:#55675F;--line:#C6D5CC;
+  --a:#3B3FD8;--a-soft:#E2E3FA;--b:#0C7F65;--b-soft:#D3EEE5;--c:#B97B05;--c-soft:#F7EAC6;--d:#C23B48;--d-soft:#F8DCDF;
+  --shadow:0 1px 2px rgba(18,38,31,.08),0 8px 24px rgba(18,38,31,.06);
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1513;--surface:#13201D;--surface2:#182925;--ink:#E3EEE8;--muted:#96AAA1;--line:#264038;
+    --a:#9094FF;--a-soft:#212559;--b:#4FD3AE;--b-soft:#12392F;--c:#F0B84A;--c-soft:#46370F;--d:#FF7F8B;--d-soft:#4A1E25;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1513;--surface:#13201D;--surface2:#182925;--ink:#E3EEE8;--muted:#96AAA1;--line:#264038;
+  --a:#9094FF;--a-soft:#212559;--b:#4FD3AE;--b-soft:#12392F;--c:#F0B84A;--c-soft:#46370F;--d:#FF7F8B;--d-soft:#4A1E25;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.62}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--a);outline-offset:2px;border-radius:6px}
+.app{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:100vh}
+
+/* ---------- route rail ---------- */
+.rail{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow:auto;padding:26px 20px 24px 24px;border-right:1px solid var(--line);background:var(--surface2);font-family:var(--sans)}
+.brand h1{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.12;margin:0 0 4px;letter-spacing:-.01em}
+.brand p{margin:0;color:var(--muted);font-size:14px}
+.overall{margin:18px 0 6px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--b);border-radius:99px;transition:width .5s}
+.route{list-style:none;margin:20px 0 0;padding:0;position:relative}
+.route::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:repeating-linear-gradient(var(--line) 0 6px,transparent 6px 11px)}
+.route li{position:relative}
+.stop{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:8px 8px 8px 0;border-radius:10px}
+.stop:hover{background:color-mix(in srgb,var(--a) 7%,transparent)}
+.dot{flex:none;width:28px;height:28px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--muted);position:relative;z-index:1}
+.stop.part .dot{border-color:var(--c);color:var(--c)}
+.stop.full .dot{background:var(--b);border-color:var(--b);color:#fff}
+.stop.cur .dot{box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 28%,transparent);border-color:var(--a)}
+.stop.cur.full .dot{border-color:var(--b)}
+.stop .tt{font-size:14.5px;font-weight:600;line-height:1.3;padding-top:3px}
+.stop.cur .tt{color:var(--a)}
+.stop small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.railfoot{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.ghost{font-family:var(--sans);font-size:13px;font-weight:600;background:transparent;border:1px solid var(--line);color:var(--ink);padding:7px 12px;border-radius:99px}
+.ghost:hover{border-color:var(--a);color:var(--a)}
+
+/* ---------- main ---------- */
+.mobbar{display:none}
+.main{min-width:0;padding:30px clamp(18px,4vw,56px) 60px;max-width:1040px;width:100%}
+.lhead h2{font-size:clamp(30px,4.2vw,46px);line-height:1.08;margin:0 0 8px;font-weight:600;letter-spacing:-.015em}
+.lhead p{margin:0;color:var(--muted);max-width:62ch}
+.tabs{display:flex;gap:6px;margin:24px 0 22px;border-bottom:1px solid var(--line);overflow-x:auto;font-family:var(--sans)}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font-weight:600;font-size:15px;color:var(--muted);white-space:nowrap;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--a);border-bottom-color:var(--a)}
+.tab .tick{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:7px;background:var(--line)}
+.tab .tick.on{background:var(--b)}
+.panel{min-height:300px}
+.panel h3{font-family:var(--sans);font-size:21px;margin:30px 0 8px;letter-spacing:-.005em}
+.panel h3:first-child{margin-top:0}
+.panel p{margin:0 0 14px;max-width:68ch}
+.panel ul,.panel ol{max-width:68ch;padding-left:22px;margin:0 0 16px}
+.panel li{margin-bottom:6px}
+.panel b,.panel strong{font-weight:600}
+.term{background:var(--a-soft);padding:0 5px;border-radius:5px}
+.callout{border-left:4px solid var(--c);background:var(--c-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0;max-width:68ch;font-size:17px}
+.callout.good{border-color:var(--b);background:var(--b-soft)}
+.callout.bad{border-color:var(--d);background:var(--d-soft)}
+.callout.info{border-color:var(--a);background:var(--a-soft)}
+.tw{overflow-x:auto;max-width:100%;margin:12px 0 20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-family:var(--sans);font-size:14.5px;line-height:1.45}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface2);font-weight:700}
+tr:last-child td{border-bottom:0}
+.ctaRow{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-family:var(--sans)}
+.btn{background:var(--a);color:#fff;border:0;padding:11px 20px;border-radius:99px;font-weight:600;font-size:15px;font-family:var(--sans)}
+.btn:hover{filter:brightness(1.08)}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.alt:hover{border-color:var(--a);color:var(--a)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.badge{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--b)}
+
+/* ---------- video-style stage ---------- */
+.stage{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.stage svg{display:block;width:100%;height:auto;font-family:var(--sans)}
+.capbox{margin:14px 0 8px;min-height:92px}
+.capbox h3{margin:0 0 4px!important;font-size:19px!important}
+.capbox p{margin:0;color:var(--muted);max-width:none}
+.seg{display:flex;gap:6px;margin:6px 0 12px}
+.seg button{flex:1;height:8px;border-radius:99px;border:0;background:var(--line);padding:0;position:relative;overflow:hidden}
+.seg button.done{background:var(--b)}
+.seg button.act::after{content:"";position:absolute;inset:0;background:var(--a);transform-origin:left;transform:scaleX(0);animation:fill var(--dur,7s) linear forwards}
+.seg.paused button.act::after{animation-play-state:paused}
+@keyframes fill{to{transform:scaleX(1)}}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;font-family:var(--sans);align-items:center}
+.ctl .ghost{min-width:44px}
+.sceneno{margin-left:auto;font-size:13px;color:var(--muted);font-family:var(--sans)}
+
+/* svg scene elements */
+.it{opacity:0;animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+.it{transform-box:fill-box;transform-origin:center}
+.bar{transform-box:fill-box;transform-origin:bottom;opacity:0;animation:grow .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes grow{from{opacity:1;transform:scaleY(.02)}to{opacity:1;transform:scaleY(1)}}
+.draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:dash .8s ease-out forwards}
+@keyframes dash{to{stroke-dashoffset:0}}
+.coin{animation:travel 2.4s ease-in-out infinite;opacity:0}
+@keyframes travel{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
+.fa{fill:var(--a-soft);stroke:var(--a)}.fb{fill:var(--b-soft);stroke:var(--b)}.fc{fill:var(--c-soft);stroke:var(--c)}.fd{fill:var(--d-soft);stroke:var(--d)}.fn{fill:var(--surface2);stroke:var(--line)}
+.sa{stroke:var(--a)}.sb{stroke:var(--b)}.sc{stroke:var(--c)}.sd{stroke:var(--d)}.sn{stroke:var(--muted)}
+.ta{fill:var(--a)}.tb{fill:var(--b)}.tc{fill:var(--c)}.td{fill:var(--d)}.tn{fill:var(--ink)}.tm{fill:var(--muted)}
+.band{opacity:.55}
+.solidA{fill:var(--a)}.solidB{fill:var(--b)}.solidC{fill:var(--c)}.solidD{fill:var(--d)}.solidN{fill:var(--muted)}
+
+.fx{font-family:var(--sans);background:var(--surface2);border:1px solid var(--line);border-left:4px solid var(--a);border-radius:10px;padding:10px 14px;margin:10px 0 16px;max-width:68ch;font-size:16px;line-height:1.55}
+/* ---------- examples ---------- */
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:0 0 18px;box-shadow:var(--shadow)}
+.ex h3{margin:0 0 6px!important}
+.ex .sc{color:var(--muted);margin:0 0 10px}
+.ex ol{margin-bottom:12px}
+.ex .res{background:var(--b-soft);border-radius:10px;padding:10px 14px;font-family:var(--sans);font-size:15px;font-weight:600;max-width:none;margin:0}
+
+/* ---------- quiz ---------- */
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);max-width:760px}
+.qmeta{display:flex;justify-content:space-between;font-family:var(--sans);font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.qcard h3{font-family:var(--serif)!important;font-weight:500;font-size:22px!important;line-height:1.35;margin:0 0 16px!important}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;font-family:var(--sans);font-size:16px;background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start}
+.opt .l{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:700}
+.opt:hover:not([disabled]){border-color:var(--a)}
+.opt.ok{border-color:var(--b);background:var(--b-soft)}
+.opt.ok .l{background:var(--b);border-color:var(--b);color:#fff}
+.opt.no{border-color:var(--d);background:var(--d-soft)}
+.opt.no .l{background:var(--d);border-color:var(--d);color:#fff}
+.opt[disabled]{cursor:default}
+.fb2{margin-top:16px;padding:12px 16px;border-radius:12px;font-size:16.5px}
+.fb2.ok{background:var(--b-soft)}.fb2.no{background:var(--d-soft)}
+.fb2 b{font-family:var(--sans)}
+.result{max-width:760px}
+.score{font-family:var(--sans);font-size:54px;font-weight:700;line-height:1;margin:8px 0}
+.rev{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:16.5px}
+.rev b{font-family:var(--sans)}
+
+/* ---------- revise ---------- */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:6px 0 22px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-size:16.5px}
+.rcard b{font-family:var(--sans);display:block;margin-bottom:4px}
+details.qa{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:0 0 10px;max-width:760px}
+details.qa summary{cursor:pointer;font-weight:600;font-family:var(--sans);font-size:16px}
+details.qa p{margin:10px 0 0}
+.kp li::marker{color:var(--b)}
+.lnav{display:flex;justify-content:space-between;gap:10px;margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--sans)}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .mobbar{display:flex;align-items:center;justify-content:space-between;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface2);border-bottom:1px solid var(--line);padding:10px 16px;font-family:var(--sans)}
+  .mobbar b{font-size:15px}
+  .rail{display:none;position:fixed;inset:0;height:auto;z-index:30;border-right:0;padding-top:calc(26px + env(safe-area-inset-top,0px))}
+  .rail.open{display:block}
+  body{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  .it,.bar,.draw{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  .coin{animation:none!important;opacity:1}
+  .seg button.act::after{animation:none!important;transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+<div class="mobbar"><b id="mobTitle">Unit II</b><button class="ghost" id="menuBtn" aria-expanded="false" aria-controls="rail">Lessons</button></div>
+<div class="app">
+  <aside class="rail" id="rail" aria-label="Lesson route">
+    <div class="brand"><h1>Forex Markets and Exchange Rate Theories</h1><p>Unit II · International Financial Management</p></div>
+    <div class="overall"><span id="ovLabel">Progress</span><span id="ovPct">0%</span></div>
+    <div class="meter"><i id="ovBar"></i></div>
+    <ol class="route" id="route"></ol>
+    <div class="railfoot">
+      <button class="ghost" id="themeBtn">Switch theme</button>
+      <button class="ghost" id="resetBtn">Reset progress</button>
+      <button class="ghost" id="closeRail">Close</button>
+    </div>
+  </aside>
+  <main class="main" id="main" tabindex="-1">
+    <header class="lhead"><h2 id="lTitle"></h2><p id="lSub"></p></header>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <section class="panel" id="panel" role="tabpanel" aria-live="polite"></section>
+    <nav class="lnav" id="lnav"></nav>
+  </main>
+</div>
+<script>
+/* UNIT II LESSON DATA. Scene items: band, box, t, arr, coin, bar, line (same DSL as Unit I) */
+const LESSONS = [];
+function G(labels, cols, x0, y0, w, h, gx, gy, tones, fs) {
+  return labels.map((l, i) => ['box', x0 + (i % cols) * (w + gx), y0 + Math.floor(i / cols) * (h + gy), w, h, l,
+    Array.isArray(tones) ? tones[i % tones.length] : tones, fs || 13.5]);
+}
+
+/* ------------------------------------------------------------------ 1 */
+LESSONS.push({
+  id: 'fxm', icon: '1', title: 'The Foreign Exchange Market',
+  sub: 'Meaning, features and participants of the world\'s largest financial market.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p>The <span class="term">foreign exchange (forex or FX) market</span> is the global, decentralised, over-the-counter (OTC) network where national currencies are bought and sold. There is no single physical location. Trading happens electronically between banks, dealers, corporates and institutions, 24 hours a day on weekdays, across Tokyo, Singapore, London and New York.</p>
+      <p>It is the largest financial market in the world. Daily turnover is several trillion US dollars; BIS surveys put it above USD 7 trillion per day.</p>` },
+    { h: 'Key features', html: `
+      <ul>
+        <li><b>Decentralised and OTC.</b> Deals are made directly between counterparties, not on a central exchange (except currency futures and options).</li>
+        <li><b>Continuous.</b> Trading follows the sun, 24 hours a day, 5 days a week.</li>
+        <li><b>Highly liquid.</b> Very large volumes with small spreads in major pairs.</li>
+        <li><b>Dominated by the interbank market.</b> Big banks trade with each other; retail customers deal through banks.</li>
+        <li><b>USD dominance.</b> The US dollar is on one side of most transactions, which makes it the "vehicle currency".</li>
+      </ul>` },
+    { h: 'Participants', html: `
+      <div class="tw"><table>
+        <tr><th>Participant</th><th>Role</th></tr>
+        <tr><td>Central banks (RBI, Fed)</td><td>Manage reserves, intervene to curb volatility, set monetary policy</td></tr>
+        <tr><td>Commercial banks / authorised dealers (AD)</td><td>Market makers; quote bid-ask rates; main volume</td></tr>
+        <tr><td>Corporates (importers, exporters, MNCs)</td><td>Settle trade, hedge exposure, repatriate profit</td></tr>
+        <tr><td>Investors and fund managers (FPIs, mutual funds)</td><td>Cross-border investment flows</td></tr>
+        <tr><td>Speculators (hedge funds, traders)</td><td>Profit from rate movements; add liquidity</td></tr>
+        <tr><td>Arbitrageurs</td><td>Exploit price differences across markets</td></tr>
+        <tr><td>Forex brokers</td><td>Match buyers and sellers for a commission; do not take positions</td></tr>
+        <tr><td>Individuals and tourists</td><td>Small retail conversions, remittances</td></tr>
+      </table></div>
+      <div class="callout info">Brokers only match buyers and sellers for a commission. Dealers (banks) take the other side of the trade and quote two-way prices.</div>` }
+  ],
+  examples: [
+    { t: 'Who does what? Matching participants', s: 'Identify the participant in each situation.',
+      steps: ['An importer buys dollars to pay a US supplier: a corporate.', 'A bank quotes 83.10 / 83.14 to its customers and other banks: an authorised dealer and market maker.', 'The RBI sells dollars to slow a sharp rupee fall: a central bank.', 'A trader buys euros expecting them to rise: a speculator.'],
+      r: 'Each participant has a distinct motive: settle, make markets, stabilise, or profit.' },
+    { t: 'The vehicle currency in action', s: 'An Indian importer must pay Japanese yen. Few banks quote INR/JPY directly, so the bank routes the trade through dollars.',
+      steps: ['Leg 1: sell INR, buy USD (USD/INR is a deep, liquid market).', 'Leg 2: sell USD, buy JPY (USD/JPY is one of the most liquid pairs).', 'The USD sits on one side of both legs.'],
+      r: 'Two liquid legs through the vehicle currency are usually cheaper than one thin direct market.' },
+    { t: 'Following the sun', s: 'Trace one trading day as markets open around the world.',
+      steps: ['Tokyo and Singapore open the Asian session.', 'London opens as Asia closes, and overlaps with New York in the afternoon (the busiest period).', 'New York closes and Tokyo reopens, so prices keep moving all weekday.'],
+      r: 'Because sessions overlap, the market is continuous 24 hours a day for 5 days a week.' }
+  ],
+  scenes: [
+    { title: 'A network, not a place', cap: 'There is no central exchange. Banks, corporates, funds and central banks deal directly with each other, with banks at the centre of the web.',
+      items: [['box', 270, 135, 160, 70, 'Banks|(dealers)', 'a', 17],
+        ['box', 40, 25, 170, 56, 'Corporates', 'b', 15], ['box', 490, 25, 170, 56, 'Central banks', 'c', 15], ['box', 40, 255, 170, 56, 'Funds and investors', 'b', 14.5], ['box', 490, 255, 170, 56, 'Speculators', 'd', 15],
+        ['arr', 210, 70, 285, 135, '', 'n'], ['arr', 490, 70, 415, 135, '', 'n'], ['arr', 210, 270, 285, 205, '', 'n'], ['arr', 490, 270, 415, 205, '', 'n'],
+        ['coin', 120, 85, 280, 150, '$', 'a'], ['coin', 580, 85, 420, 150, '€', 'c']] },
+    { title: 'Following the sun', cap: 'Tokyo, Singapore, London and New York pass the market from one to the next, so currencies trade 24 hours a day on weekdays.',
+      items: [['line', 60, 150, 640, 150, 'n', 1],
+        ['box', 20, 105, 150, 90, 'Tokyo|Singapore', 'a', 15], ['box', 190, 105, 150, 90, 'London', 'b', 16], ['box', 360, 105, 150, 90, 'New York', 'c', 16], ['box', 530, 105, 150, 90, 'Tokyo|reopens', 'a', 15],
+        ['t', 350, 245, 'Overlaps (London and New York) are the busiest hours', 14, 'middle', 'm']] },
+    { title: 'Why the dollar is the vehicle', cap: 'Most currency pairs trade through the US dollar because USD pairs are the deepest and cheapest to deal.',
+      items: [['box', 275, 130, 150, 80, 'US dollar|(vehicle)', 'a', 17],
+        ['box', 40, 40, 140, 56, 'INR', 'b', 16], ['box', 520, 40, 140, 56, 'EUR', 'b', 16], ['box', 40, 245, 140, 56, 'JPY', 'b', 16], ['box', 520, 245, 140, 56, 'GBP', 'b', 16],
+        ['arr', 180, 80, 278, 140, '', 'a'], ['arr', 520, 80, 422, 140, '', 'a'], ['arr', 180, 260, 278, 200, '', 'a'], ['arr', 520, 260, 422, 200, '', 'a']] },
+    { title: 'Who trades and why', cap: 'Each group has its own motive: settle, make markets, stabilise, invest, speculate, arbitrage, match or convert.',
+      items: G(['Central banks|stabilise', 'Banks|make markets', 'Corporates|settle and hedge', 'Investors|cross-border flows', 'Speculators|seek profit', 'Arbitrageurs|remove gaps', 'Brokers|match for fee', 'Tourists|small conversions'], 4, 25, 60, 150, 80, 15, 40, ['c', 'a', 'b', 'b', 'd', 'a', 'n', 'n'], 12.5) }
+  ],
+  quiz: [
+    { q: 'The foreign exchange market is best described as:', o: ['A single exchange building in London', 'A global, decentralised OTC network trading currencies', 'A market only for central banks', 'A market for shares of foreign companies'], a: 1, e: 'There is no central location; trading is electronic and over the counter.' },
+    { q: 'Which statement about forex market participants is correct?', o: ['Brokers take positions on their own account', 'Brokers match buyers and sellers for a commission', 'Arbitrageurs hold large unhedged positions', 'Central banks never trade'], a: 1, e: 'Brokers only match counterparties; dealers (banks) take positions and make markets.' },
+    { q: 'The US dollar is called the "vehicle currency" because:', o: ['It is on one side of most transactions', 'It is pegged to gold today', 'It is the only currency traded', 'It is only used by the Fed'], a: 0, e: 'Most pairs are traded via USD, which makes it the vehicle.' },
+    { q: 'The forex market is open:', o: ['9 hours on weekdays', '24 hours a day, 5 days a week', '24 hours a day, 7 days a week', 'Only during New York hours'], a: 1, e: 'Trading follows the sun, 24 hours a day on weekdays.' },
+    { q: 'Whose main role is to quote bid-ask rates and act as market makers?', o: ['Authorised dealers (commercial banks)', 'Tourists', 'Brokers', 'Speculators'], a: 0, e: 'Commercial banks and authorised dealers are the market makers.' }
+  ],
+  revise: {
+    points: ['Forex market = global, decentralised, OTC currency network; USD 7 trillion+ per day (BIS).', 'Features: decentralised, continuous, liquid, interbank-dominated, USD vehicle currency.', 'Participants: central banks, banks/ADs, corporates, investors, speculators, arbitrageurs, brokers, individuals.', 'Brokers match for commission; dealers make markets and take positions.'],
+    tip: 'Present participants as a two-column table (participant and role); it scores quickly and is easy to mark.',
+    memory: 'D-C-L-I-U: Decentralised, Continuous, Liquid, Interbank, USD.',
+    qs: [{ q: 'Define the forex market and list its participants.', a: 'The global, decentralised OTC network where currencies are bought and sold, 24 hours on weekdays. Participants: central banks, commercial banks and ADs, corporates, investors and funds, speculators, arbitrageurs, brokers and individuals, each with a role.' },
+      { q: 'State the main features of the forex market.', a: 'Decentralised and OTC, continuous, highly liquid, dominated by the interbank market, and with the USD as the vehicle currency.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 2 */
+LESSONS.push({
+  id: 'fxf', icon: '2', title: 'Functions of the Foreign Exchange Market',
+  sub: 'Transfer of purchasing power, credit, hedging and five more roles the market plays.',
+  learn: [
+    { h: 'The eight functions', html: `
+      <ol>
+        <li><b>Transfer of purchasing power.</b> Converts one currency into another so buyers and sellers in different countries can settle transactions. This is the basic function.</li>
+        <li><b>Provision of credit.</b> Finances international trade through letters of credit, bills of exchange and trade credit, usually with a lag of 30 to 180 days.</li>
+        <li><b>Hedging (provision of cover).</b> Protects against exchange-rate risk using forwards, futures, options and swaps. An importer who must pay USD in 3 months can lock in a rate today.</li>
+        <li><b>Speculation.</b> Traders take open positions expecting rate changes. This adds liquidity but can add volatility.</li>
+        <li><b>Arbitrage.</b> Exploits price differences to earn riskless profit, which keeps rates consistent across markets.</li>
+        <li><b>Price discovery.</b> Determines the equilibrium exchange rate through demand and supply.</li>
+        <li><b>Facilitating international investment.</b> FDI, portfolio flows and remittances require currency conversion.</li>
+        <li><b>Instrument of monetary policy.</b> Central banks use intervention to manage reserves and stabilise the currency.</li>
+      </ol>
+      <div class="callout">Exam tip: the three classic functions are <b>transfer of purchasing power, provision of credit and provision of hedging facilities</b>. Mention speculation and arbitrage as supporting functions.</div>` },
+    { h: 'Grouping the functions', html: `
+      <div class="tw"><table>
+        <tr><th>Group</th><th>Functions</th><th>Nature</th></tr>
+        <tr><td>Classic</td><td>Purchasing power, credit, hedging</td><td>Directly serve trade and business users</td></tr>
+        <tr><td>Market-making</td><td>Speculation, arbitrage, price discovery</td><td>Keep the market liquid and prices consistent</td></tr>
+        <tr><td>Macro and capital</td><td>International investment, monetary policy</td><td>Link currencies to capital flows and policy</td></tr>
+      </table></div>` }
+  ],
+  examples: [
+    { t: 'Hedging an import payment', s: 'An Indian importer must pay USD 100,000 in 3 months. Spot is ₹83.00 and the 3-month forward is ₹83.80.',
+      steps: ['Forward cost locked in today = 100,000 × 83.80 = ₹83,80,000.', 'If spot in 3 months is ₹86.00, unhedged cost = ₹86,00,000, so the forward saved ₹2,20,000.', 'If spot is ₹81.00, unhedged cost = ₹81,00,000, so the forward cost ₹2,80,000 more than not hedging.'],
+      r: 'Hedging gives certainty, not a guaranteed saving: the cost is fixed at ₹83.8 lakh whatever happens.' },
+    { t: 'Credit function through a letter of credit', s: 'An exporter ships goods on a 90-day bill of exchange backed by the importer\'s bank.',
+      steps: ['The exporter ships and presents documents to its bank.', 'The bank may discount the bill and pay the exporter now.', 'The importer pays at maturity, 90 days later, in the agreed currency.'],
+      r: 'The market supplies short-term trade credit, usually 30 to 180 days.' },
+    { t: 'Arbitrage keeps rates consistent', s: 'USD/INR is 83.00 in Mumbai and 83.30 in London.',
+      steps: ['Arbitrageurs buy dollars in Mumbai at 83.00 and sell in London at 83.30.', 'Buying lifts the Mumbai rate; selling lowers the London rate.', 'The two rates converge and the gap closes.'],
+      r: 'Arbitrage is the market\'s self-correcting mechanism.' }
+  ],
+  scenes: [
+    { title: 'Transfer of purchasing power', cap: 'The basic function: rupees become dollars so an Indian buyer can pay a US seller who needs dollars.',
+      items: [['box', 30, 120, 190, 70, 'Indian buyer|holds ₹', 'a', 16], ['box', 270, 120, 160, 70, 'Forex|market', 'b', 17], ['box', 480, 120, 190, 70, 'US seller|needs $', 'c', 16],
+        ['arr', 220, 155, 270, 155, '', 'n'], ['arr', 430, 155, 480, 155, '', 'n'], ['coin', 110, 215, 330, 215, '₹', 'a'], ['coin', 360, 245, 580, 245, '$', 'c'],
+        ['t', 350, 300, 'Currency swapped so the payment can be settled', 14, 'middle', 'm']] },
+    { title: 'Hedging: locking in a rate', cap: 'With a forward at ₹83.80 the importer pays ₹83.8 lakh whatever happens; without it the bill could be ₹86 lakh or ₹81 lakh.',
+      items: [['t', 350, 34, 'Cost of USD 100,000 in 3 months (₹ lakh)', 15, 'middle', 'n'],
+        ['bar', 90, 290, 110, 160, 'Forward|locked', 'a', '83.8'], ['bar', 240, 290, 110, 176, 'Spot rises|to 86', 'd', '86.0'], ['bar', 390, 290, 110, 132, 'Spot falls|to 81', 'b', '81.0'],
+        ['t', 595, 170, 'Forward gives|certainty', 15, 'middle', 'a'], ['t', 595, 215, '(axis truncated)', 12, 'middle', 'm']] },
+    { title: 'Eight functions on one map', cap: 'Three classic functions serve business users; the rest keep prices fair, connect capital flows and support policy.',
+      items: G(['Purchasing|power', 'Credit', 'Hedging', 'Speculation', 'Arbitrage', 'Price|discovery', 'International|investment', 'Monetary|policy'], 4, 25, 60, 150, 80, 15, 40, ['a', 'a', 'a', 'd', 'c', 'c', 'b', 'b'], 15) }
+  ],
+  quiz: [
+    { q: 'The basic function of the forex market is:', o: ['Speculation', 'Transfer of purchasing power', 'Price discovery', 'Monetary policy'], a: 1, e: 'Converting currencies so cross-border payments can be settled is the basic function.' },
+    { q: 'An importer who locks in a rate today for a payment in 3 months is using the:', o: ['Credit function', 'Hedging function', 'Speculation function', 'Arbitrage function'], a: 1, e: 'Provision of cover (hedging) protects against exchange-rate risk.' },
+    { q: 'Trade credit through bills of exchange usually runs for about:', o: ['1 to 2 days', '30 to 180 days', '5 to 10 years', 'Exactly 12 months'], a: 1, e: 'Typical trade credit has a lag of 30 to 180 days.' },
+    { q: 'Importer owes USD 100,000; forward ₹83.80 locks the cost at:', o: ['₹83,80,000', '₹8,38,000', '₹86,00,000', '₹81,00,000'], a: 0, e: '100,000 × 83.80 = ₹83,80,000.' },
+    { q: 'Which function keeps exchange rates consistent across markets?', o: ['Arbitrage', 'Credit', 'Remittance', 'Hedging'], a: 0, e: 'Arbitrage removes price gaps between markets.' }
+  ],
+  revise: {
+    points: ['Eight functions: purchasing power, credit, hedging, speculation, arbitrage, price discovery, international investment, monetary policy.', 'Classic three: purchasing power, credit, hedging.', 'Hedging fixes the cost; it does not guarantee savings.', 'Arbitrage keeps rates consistent; speculation adds liquidity and volatility.'],
+    tip: 'Name the three classic functions first, then add the rest as supporting functions. Add the 3-month hedge example.',
+    memory: 'P-C-H first, then S-A-P-I-M.',
+    qs: [{ q: 'Explain the functions of the foreign exchange market.', a: 'Transfer of purchasing power, provision of credit, hedging (the classic three), plus speculation, arbitrage, price discovery, facilitation of international investment and use as an instrument of monetary policy. Illustrate with a forward hedge.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 3 */
+LESSONS.push({
+  id: 'spotfwd', icon: '3', title: 'Spot Market and Forward Market',
+  sub: 'Immediate versus future delivery, forward premium and discount, and the related instruments.',
+  learn: [
+    { h: 'Spot market', html: `
+      <ul>
+        <li>A <span class="term">spot transaction</span> is the purchase or sale of foreign currency for settlement within two business days, called the <b>value date (T+2)</b>. Some pairs, such as USD/CAD, settle at T+1.</li>
+        <li>Executed at the spot rate prevailing on the deal date.</li>
+        <li>The largest segment of the forex market; used for immediate needs, speculation and arbitrage.</li>
+        <li>The spot rate is the benchmark for pricing forwards.</li>
+      </ul>` },
+    { h: 'Forward market', html: `
+      <ul>
+        <li>A <span class="term">forward contract</span> is an agreement today to buy or sell a currency at a pre-agreed rate (the forward rate) on a specified future date, typically 1, 3, 6 or 12 months.</li>
+        <li>Customised, OTC, binding on both parties, generally no upfront cash movement.</li>
+        <li>Main purpose: hedging transaction exposure; also used for speculation.</li>
+        <li>Settlement at maturity is at the contract rate regardless of the spot rate then.</li>
+      </ul>
+      <h3>Forward premium and discount</h3>
+      <ul><li>Forward rate &gt; spot (direct quote): the foreign currency is at a <b>forward premium</b>.</li><li>Forward rate &lt; spot: the foreign currency is at a <b>forward discount</b>.</li></ul>
+      <div class="fx">Annualised premium/discount (%) = [(F − S) / S] × (12 / n) × 100, where n = months of the contract.</div>` },
+    { h: 'Spot versus forward', html: `
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>Spot</th><th>Forward</th></tr>
+        <tr><td>Settlement</td><td>Within 2 business days</td><td>Future date agreed (1 month, 3 months...)</td></tr>
+        <tr><td>Rate</td><td>Current market rate</td><td>Rate fixed today for future delivery</td></tr>
+        <tr><td>Purpose</td><td>Immediate need, speculation</td><td>Hedging, speculation</td></tr>
+        <tr><td>Customisation</td><td>Standardised</td><td>Tailor-made amount and date</td></tr>
+        <tr><td>Risk</td><td>Low settlement-time risk</td><td>Counterparty (credit) risk until maturity</td></tr>
+      </table></div>` },
+    { h: 'Related instruments', html: `
+      <ul>
+        <li><b>Currency / FX swap:</b> simultaneous spot purchase and forward sale (or the reverse) of a currency; used to manage liquidity and funding.</li>
+        <li><b>Currency futures:</b> standardised, exchange-traded contracts (in India on NSE and BSE: USD/INR, EUR/INR, GBP/INR, JPY/INR), marked to market daily.</li>
+        <li><b>Currency options:</b> give the right, but not the obligation, to buy (call) or sell (put) at a strike price by expiry; the buyer pays a premium.</li>
+      </ul>` }
+  ],
+  examples: [
+    { t: 'Forward premium', s: 'Spot USD/INR = 83.00; 3-month forward = 83.80.',
+      steps: ['(83.80 − 83.00) / 83.00 = 0.964%.', 'Annualise: × (12/3) = × 4 → 3.86% per annum.', 'F > S, so USD is at a premium.'],
+      r: 'USD is at a forward premium of about 3.86% p.a.' },
+    { t: 'Forward discount', s: 'Spot USD/INR = 83.00; 6-month forward = 82.20.',
+      steps: ['(82.20 − 83.00) / 83.00 = −0.964%.', 'Annualise: × (12/6) = × 2 → −1.93% per annum.', 'F < S, so USD is at a discount.'],
+      r: 'USD is at a forward discount of about 1.93% p.a.' },
+    { t: 'Option versus forward', s: 'A call option on USD has strike ₹83.50 and costs a premium of ₹0.40 per dollar. Compare outcomes at expiry.',
+      steps: ['If spot = ₹86.00: exercise, gain = 86.00 − 83.50 − 0.40 = ₹2.10 per $.', 'If spot = ₹82.00: do not exercise, loss limited to the ₹0.40 premium.', 'A forward would force settlement at the contract rate either way.'],
+      r: 'Options cap the loss at the premium but cost upfront; forwards cost nothing upfront but are binding.' }
+  ],
+  scenes: [
+    { title: 'Spot: settle in two days', cap: 'A spot deal is priced today and settles on the value date, two business days later (T+2).',
+      items: [['line', 80, 122, 620, 122, 'n', 1],
+        ['box', 25, 90, 180, 64, 'Deal date (T)|spot rate fixed', 'a', 14], ['box', 260, 90, 180, 64, 'T+1', 'n', 15], ['box', 495, 90, 180, 64, 'T+2 value date|currencies delivered', 'b', 14],
+        ['coin', 115, 205, 585, 205, '$', 'b'], ['t', 350, 270, 'Some pairs such as USD/CAD settle at T+1', 14, 'middle', 'm']] },
+    { title: 'Forward: fix today, settle later', cap: 'A forward fixes the rate today for delivery on an agreed future date; at maturity the contract rate applies whatever spot is then.',
+      items: [['line', 80, 120, 620, 120, 'n', 1],
+        ['box', 25, 90, 190, 60, 'Today|agree F = 83.80', 'a', 14.5], ['box', 465, 90, 210, 60, 'In 3 months|spot may be 81 or 86', 'c', 14],
+        ['t', 350, 165, 'contract binds both parties', 13, 'middle', 'm'],
+        ['box', 220, 195, 260, 60, 'Settle at 83.80|regardless of spot', 'b', 15]] },
+    { title: 'Premium and discount', cap: 'A 3-month forward at 83.80 versus spot 83.00 is a premium of 0.964%, or 3.86% a year. A forward below spot would be a discount.',
+      items: [['t', 350, 36, 'USD/INR (axis truncated)', 14, 'middle', 'm'],
+        ['bar', 90, 290, 110, 120, 'Spot|83.00', 'a', '83.00'], ['bar', 240, 290, 110, 160, '3M forward|83.80', 'b', '83.80'], ['bar', 390, 290, 110, 90, '6M forward|82.20', 'd', '82.20'],
+        ['t', 600, 140, '3.86% p.a.|premium', 15, 'middle', 'b'], ['t', 600, 230, '1.93% p.a.|discount', 15, 'middle', 'd']] },
+    { title: 'Related instruments', cap: 'Swaps combine a spot and a forward, futures are exchange-traded and marked to market daily, and options give a right without an obligation.',
+      items: [['box', 255, 25, 190, 60, 'Forward|customised OTC', 'a', 15],
+        ...G(['FX swap|spot + forward|in opposite directions', 'Currency futures|exchange-traded|marked to market', 'Currency options|right, not obligation|premium paid'], 3, 35, 190, 190, 90, 20, 0, ['b', 'c', 'd'], 13.5),
+        ['arr', 300, 85, 130, 190, '', 'n'], ['arr', 350, 85, 350, 190, '', 'n'], ['arr', 400, 85, 570, 190, '', 'n']] }
+  ],
+  quiz: [
+    { q: 'The value date of a typical spot trade is:', o: ['Same day only', 'T+2 business days', '30 days later', '1 year later'], a: 1, e: 'Spot settles within two business days (T+2); some pairs like USD/CAD settle T+1.' },
+    { q: 'Spot 83.00, 3-month forward 83.80. USD is at a forward:', o: ['Discount of 0.96% p.a.', 'Premium of about 3.86% p.a.', 'Premium of 0.96% p.a.', 'Discount of 3.86% p.a.'], a: 1, e: '(0.80/83.00) × 4 = 3.86% p.a., and F > S gives a premium.' },
+    { q: 'Spot 83.00, 6-month forward 82.20. Annualised discount is about:', o: ['0.96%', '1.93%', '3.86%', '0.48%'], a: 1, e: '(−0.80/83.00) × (12/6) = −1.93%.' },
+    { q: 'Which instrument gives the right but not the obligation to buy or sell a currency?', o: ['Forward', 'Futures', 'Option', 'Spot'], a: 2, e: 'Options give the right, not the obligation; the buyer pays a premium.' },
+    { q: 'Compared with forwards, currency futures are:', o: ['Customised and OTC', 'Standardised, exchange-traded and marked to market daily', 'Not traded in India', 'Settled on the deal date'], a: 1, e: 'Futures are standardised exchange contracts marked to market daily.' }
+  ],
+  revise: {
+    points: ['Spot: settlement T+2 (some T+1), current rate; benchmark for forwards.', 'Forward: agreed rate for a future date; customised, OTC, binding; hedging.', 'Premium/discount % = [(F − S)/S] × (12/n) × 100.', 'Swap = spot + forward; futures = exchange-traded; options = right without obligation.'],
+    tip: 'Write the formula, plug in numbers, then state premium or discount. Marks are for the final interpretation.',
+    memory: 'F above S = premium; F below S = discount.',
+    qs: [{ q: 'Differentiate between spot and forward markets.', a: 'Compare settlement (2 days vs agreed future date), rate (current vs fixed today), purpose, customisation and risk (counterparty risk in forwards).' },
+      { q: 'Compute the forward premium: spot 83, 3-month forward 83.80.', a: '[(83.80 − 83) / 83] × 4 × 100 = 3.86% p.a.; USD at a premium.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 4 */
+LESSONS.push({
+  id: 'exrate', icon: '4', title: 'Exchange Rate: Types, Regimes and Determinants',
+  sub: 'What an exchange rate is, how it is classified, and why currencies appreciate or depreciate.',
+  learn: [
+    { h: 'Meaning and types', html: `
+      <p>The <span class="term">exchange rate</span> is the price of one currency expressed in terms of another. USD/INR = 83.00 means one US dollar costs 83 rupees.</p>
+      <ul>
+        <li><b>Spot and forward rates:</b> for immediate or future delivery.</li>
+        <li><b>Nominal exchange rate:</b> the quoted market rate.</li>
+        <li><b>Real exchange rate:</b> the nominal rate adjusted for price-level differences between countries; it shows true competitiveness.</li>
+        <li><b>Cross rate:</b> the rate between two currencies derived from their rates against a third (usually USD).</li>
+        <li><b>Effective exchange rate (NEER/REER):</b> a weighted average of a currency against a basket of trading partners' currencies.</li>
+      </ul>` },
+    { h: 'Exchange-rate regimes', html: `
+      <ul>
+        <li><b>Fixed (pegged):</b> government fixes the rate against another currency or gold.</li>
+        <li><b>Floating (free float):</b> determined purely by demand and supply.</li>
+        <li><b>Managed float (dirty float):</b> market determined, with central-bank intervention. India broadly follows this.</li>
+        <li><b>Crawling peg, currency board, dollarisation:</b> variations of fixed arrangements.</li>
+      </ul>` },
+    { h: 'Appreciation and depreciation', html: `
+      <p><b>Appreciation:</b> a currency becomes more valuable (fewer units of it are needed to buy foreign currency). <b>Depreciation:</b> it loses value. If USD/INR moves from 83 to 85, the rupee has depreciated and the dollar has appreciated.</p>
+      <div class="fx">% change in the foreign currency = [(S₁ − S₀) / S₀] × 100 (direct quote).</div>
+      <h3>Factors affecting exchange rates</h3>
+      <ol>
+        <li>Inflation differentials</li><li>Interest-rate differentials</li><li>Balance of payments</li><li>Capital flows</li>
+        <li>Central-bank intervention</li><li>Political stability</li><li>Speculation</li><li>Economic growth</li>
+      </ol>` }
+  ],
+  examples: [
+    { t: 'Dollar appreciation versus rupee depreciation', s: 'USD/INR moves from 83 to 85.',
+      steps: ['Dollar change = (85 − 83) / 83 = 2.41% appreciation.', 'The rupee value of a dollar rises, so the rupee has depreciated.', 'In rupee terms, 1 INR buys 1/83 = $0.01205 before and 1/85 = $0.01176 after, a fall of about 2.35%.'],
+      r: 'The dollar gains 2.41% in rupees; the rupee loses about 2.35% in dollars. The two percentages differ slightly.' },
+    { t: 'Nominal versus real (illustrative)', s: 'USD/INR = 83. A basket costs ₹8,000 in India and $100 in the US. Real exchange rate = S × P(US) / P(India).',
+      steps: ['RER = 83 × 100 / 8,000 = 1.0375.', 'A value above 1 means the US basket is more expensive than the Indian basket at the market rate.', 'Indian goods are therefore relatively cheap, helping export competitiveness.'],
+      r: 'The real rate adjusts the nominal rate for price levels and shows true competitiveness.' },
+    { t: 'Effective exchange rate (toy example)', s: 'India trades 60% with the US and 40% with the Eurozone. The rupee depreciates 3% against USD and appreciates 2% against EUR.',
+      steps: ['Weighted change = 0.60 × (−3%) + 0.40 × (+2%).', '= −1.8% + 0.8% = −1.0%.', 'The rupee has depreciated about 1% on a trade-weighted basis.'],
+      r: 'NEER shows the overall move, which can differ from any single bilateral rate.' }
+  ],
+  scenes: [
+    { title: 'Appreciation and depreciation', cap: 'When USD/INR rises from 83 to 85, the dollar appreciates against the rupee and the rupee depreciates against the dollar.',
+      items: [['box', 40, 80, 190, 80, 'USD/INR = 83|before', 'a', 16], ['box', 470, 80, 190, 80, 'USD/INR = 85|after', 'c', 16],
+        ['arr', 230, 120, 470, 120, 'rate rises', 'n'], ['box', 40, 220, 190, 60, 'Dollar|appreciates +2.41%', 'b', 14.5], ['box', 470, 220, 190, 60, 'Rupee|depreciates', 'd', 15],
+        ['coin', 135, 175, 135, 215, '$', 'b']] },
+    { title: 'From fixed to floating', cap: 'Regimes sit on a spectrum from rigid pegs to free floats. India broadly follows a managed float.',
+      items: [['line', 60, 150, 640, 150, 'n'],
+        ['box', 25, 105, 140, 90, 'Fixed|(pegged)', 'a', 15], ['box', 190, 105, 140, 90, 'Crawling peg|currency board', 'c', 13.5], ['box', 360, 105, 150, 90, 'Managed float|(India)', 'b', 15], ['box', 535, 105, 140, 90, 'Free float', 'd', 15],
+        ['t', 95, 235, 'least flexible', 13, 'middle', 'm'], ['t', 605, 235, 'most flexible', 13, 'middle', 'm']] },
+    { title: 'What moves exchange rates', cap: 'Inflation, interest rates, the balance of payments, capital flows, intervention, politics, speculation and growth all push demand and supply.',
+      items: [['box', 265, 130, 170, 80, 'Exchange|rate', 'a', 18],
+        ...G(['Inflation|differentials', 'Interest-rate|differentials', 'Balance of|payments', 'Capital flows'], 1, 25, 25, 190, 56, 0, 20, ['b', 'b', 'c', 'c'], 14),
+        ...G(['Central-bank|intervention', 'Political|stability', 'Speculation', 'Economic|growth'], 1, 485, 25, 190, 56, 0, 20, ['d', 'd', 'c', 'b'], 14),
+        ['arr', 215, 53, 268, 140, '', 'n'], ['arr', 215, 129, 265, 165, '', 'n'], ['arr', 215, 205, 265, 185, '', 'n'], ['arr', 215, 281, 275, 205, '', 'n'],
+        ['arr', 485, 53, 432, 140, '', 'n'], ['arr', 485, 129, 435, 165, '', 'n'], ['arr', 485, 205, 435, 185, '', 'n'], ['arr', 485, 281, 425, 205, '', 'n']] }
+  ],
+  quiz: [
+    { q: 'The real exchange rate is the nominal rate:', o: ['Quoted by banks only', 'Adjusted for price-level differences between countries', 'Fixed by the central bank', 'Used only for forwards'], a: 1, e: 'It adjusts for relative price levels and shows true competitiveness.' },
+    { q: 'USD/INR moves from 83 to 85. Which is correct?', o: ['Rupee appreciated', 'Rupee depreciated and dollar appreciated', 'Both appreciated', 'No change'], a: 1, e: 'More rupees per dollar means the rupee is weaker.' },
+    { q: 'India broadly follows which regime?', o: ['Free float', 'Managed (dirty) float', 'Currency board', 'Dollarisation'], a: 1, e: 'India is market determined with central-bank intervention.' },
+    { q: 'The percentage change in the dollar when USD/INR goes from 83 to 85 is about:', o: ['2.35%', '2.41%', '4.82%', '0.24%'], a: 1, e: '(85 − 83) / 83 = 2.41%.' },
+    { q: 'A weighted average of a currency against a basket of partners\' currencies is the:', o: ['Cross rate', 'Effective exchange rate (NEER/REER)', 'Forward rate', 'Spot rate'], a: 1, e: 'NEER (nominal) and REER (real) are trade-weighted indices.' }
+  ],
+  revise: {
+    points: ['Exchange rate = price of one currency in another.', 'Types: spot, forward, nominal, real, cross, effective (NEER/REER).', 'Regimes: fixed, floating, managed float (India), crawling peg, currency board, dollarisation.', 'Appreciation/depreciation: % change = [(S₁ − S₀)/S₀] × 100. Factors: inflation, interest, BoP, capital flows, intervention, politics, speculation, growth.'],
+    tip: 'Always state which currency is appreciating, and under which quote convention (direct).',
+    memory: 'More rupees per dollar = rupee weaker.',
+    qs: [{ q: 'Explain the factors affecting exchange rates.', a: 'Inflation and interest-rate differentials, balance of payments, capital flows, central-bank intervention, political stability, speculation and economic growth, each shifting the demand for or supply of a currency.' }]
+  }
+});
+/* ------------------------------------------------------------------ 5 */
+LESSONS.push({
+  id: 'quotes', icon: '5', title: 'Exchange Rate Quotations',
+  sub: 'Direct and indirect quotes, bid-ask spreads, forward points and cross rates.',
+  learn: [
+    { h: 'Direct and indirect quotes', html: `
+      <ul>
+        <li><b>Direct quote</b> (home currency per unit of foreign currency): from India's view, USD 1 = INR 83. The foreign currency is the commodity and the home currency is the price. This is the quoting method used in India.</li>
+        <li><b>Indirect quote</b> (foreign currency per unit of home currency): INR 1 = USD 0.01205.</li>
+      </ul>
+      <div class="fx">Indirect quote = 1 / Direct quote</div>` },
+    { h: 'Two-way (bid-ask) quotes', html: `
+      <p>Banks always quote two prices. The <b>bid</b> is the rate at which the bank buys the base currency; the <b>ask (offer)</b> is the rate at which it sells it.</p>
+      <p>Example: USD/INR = 83.10 / 83.14. The bank buys USD at 83.10 and sells USD at 83.14.</p>
+      <div class="fx">Spread = Ask − Bid = 0.04 (4 paise).<br>% spread = (Ask − Bid) / Ask × 100 = (0.04 / 83.14) × 100 = 0.048%</div>
+      <p>The spread is the dealer's profit margin and compensates for risk. It narrows with liquidity (major pairs) and widens in volatile or thinly traded markets.</p>
+      <div class="callout good"><b>Memory rule:</b> the bank buys low and sells high. The customer always gets the less favourable side: the customer <b>sells at the bid</b> and <b>buys at the ask</b>.</div>` },
+    { h: 'Forward quotes (swap points)', html: `
+      <p>Forward rates are quoted as swap points added to or subtracted from spot.</p>
+      <ul>
+        <li>If forward bid points &lt; forward ask points (ascending): <b>add</b> the points (forward premium).</li>
+        <li>If forward bid points &gt; forward ask points (descending): <b>subtract</b> the points (forward discount).</li>
+      </ul>
+      <p>Example: spot 83.10 / 83.14 and 3-month points 40 / 45 (paise). Forward = 83.50 / 83.59.</p>` },
+    { h: 'Cross rates', html: `
+      <p>When two currencies are not quoted directly, the rate is derived through a common currency. Example: EUR/USD = 1.1000 and USD/INR = 83.00, so EUR/INR = 1.1000 × 83.00 = 91.30.</p>
+      <p>For bid-ask cross rates, multiply bids with bids and asks with asks when the quotes chain in the same direction (EUR/USD × USD/INR). If a quote must be inverted, invert and swap bid and ask:</p>
+      <div class="fx">bid(1/X) = 1 / ask(X)  and  ask(1/X) = 1 / bid(X)</div>` }
+  ],
+  examples: [
+    { t: 'Bid, ask and spread', s: 'A bank quotes USD/INR 83.10 / 83.14.',
+      steps: ['A customer selling USD receives the bid: 83.10 per dollar.', 'A customer buying USD pays the ask: 83.14 per dollar.', 'Spread = 83.14 − 83.10 = 0.04; % spread = 0.04 / 83.14 = 0.048%.'],
+      r: 'Selling $1,000,000 gives ₹8,31,00,000; buying it back costs ₹8,31,40,000, a ₹40,000 round-trip cost.' },
+    { t: 'Forward quote from swap points', s: 'Spot 83.10 / 83.14. The 3-month points are 40 / 45 paise.',
+      steps: ['Bid points 40 < ask points 45, so add.', 'Forward bid = 83.10 + 0.40 = 83.50.', 'Forward ask = 83.14 + 0.45 = 83.59.'],
+      r: '3-month forward = 83.50 / 83.59 (USD at a premium).' },
+    { t: 'Bid-ask cross rate (illustrative)', s: 'EUR/USD = 1.0990 / 1.1010 and USD/INR = 83.00 / 83.04. Find EUR/INR.',
+      steps: ['The quotes chain in the same direction (EUR/USD × USD/INR).', 'Bid = 1.0990 × 83.00 = 91.217.', 'Ask = 1.1010 × 83.04 = 91.427.'],
+      r: 'EUR/INR = 91.217 / 91.427. With single rates: 1.1000 × 83.00 = 91.30.' }
+  ],
+  scenes: [
+    { title: 'Direct versus indirect', cap: 'The direct quote prices one dollar in rupees; the indirect quote prices one rupee in dollars. They are reciprocals.',
+      items: [['box', 40, 70, 280, 90, 'Direct quote|USD 1 = INR 83', 'a', 17], ['box', 380, 70, 280, 90, 'Indirect quote|INR 1 = USD 0.01205', 'c', 16],
+        ['arr', 320, 105, 380, 105, '', 'n'], ['arr', 380, 130, 320, 130, '', 'n'], ['t', 350, 210, 'Indirect = 1 / Direct', 18, 'middle', 'n'], ['t', 350, 250, '1 / 83 = 0.01205', 15, 'middle', 'm']] },
+    { title: 'The bank buys low and sells high', cap: 'At 83.10 / 83.14 the bank buys dollars at 83.10 and sells at 83.14; the 4 paise spread is its margin.',
+      items: [['box', 265, 110, 170, 80, 'Bank|83.10 / 83.14', 'a', 15], ['box', 20, 110, 140, 80, 'Customer|sells $', 'b', 15], ['box', 540, 110, 140, 80, 'Customer|buys $', 'c', 15],
+        ['arr', 160, 135, 265, 135, 'buys at 83.10', 'n'], ['arr', 435, 165, 540, 165, 'sells at 83.14', 'n'],
+        ['coin', 90, 225, 330, 225, '$', 'b'], ['coin', 610, 225, 370, 225, '₹', 'c'], ['t', 350, 285, 'Spread = 0.04 (4 paise) = 0.048%', 15, 'middle', 'm']] },
+    { title: 'Forward points: ascending means add', cap: 'Spot 83.10 / 83.14 plus points 40 / 45 paise gives a forward of 83.50 / 83.59.',
+      items: [['box', 20, 40, 200, 70, 'Spot|83.10 / 83.14', 'a', 16], ['box', 255, 40, 190, 70, 'Points|+0.40 / +0.45', 'c', 16], ['box', 480, 40, 200, 70, 'Forward|83.50 / 83.59', 'b', 16],
+        ['t', 237, 75, '+', 28, 'middle', 'n'], ['t', 462, 75, '=', 28, 'middle', 'n'],
+        ['t', 350, 220, 'Bid points 40 < ask points 45  →  add', 16, 'middle', 'n'], ['t', 350, 255, 'Descending points would be subtracted (forward discount)', 14, 'middle', 'm']] },
+    { title: 'Cross rate through a common currency', cap: 'EUR/USD times USD/INR gives EUR/INR: 1.1000 × 83.00 = 91.30.',
+      items: [['box', 30, 110, 170, 80, 'EUR/USD|1.1000', 'a', 17], ['box', 265, 110, 170, 80, 'USD/INR|83.00', 'c', 17], ['box', 500, 110, 170, 80, 'EUR/INR|91.30', 'b', 17],
+        ['t', 232, 150, '×', 30, 'middle', 'n'], ['t', 467, 150, '=', 30, 'middle', 'n'],
+        ['t', 350, 250, 'Bids × bids and asks × asks when chained in the same direction', 14, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'Which is a direct quote from India\'s viewpoint?', o: ['INR 1 = USD 0.01205', 'USD 1 = INR 83', 'EUR 1 = USD 1.10', 'USD 1 = EUR 0.91'], a: 1, e: 'A direct quote gives home currency per unit of foreign currency.' },
+    { q: 'USD/INR = 83.10 / 83.14. A customer buying USD pays:', o: ['83.10', '83.14', '83.12', '0.04'], a: 1, e: 'The customer buys at the ask; the bank sells at the higher rate.' },
+    { q: 'The percentage spread on 83.10 / 83.14 is about:', o: ['0.048%', '0.48%', '4.8%', '0.004%'], a: 0, e: '0.04 / 83.14 × 100 = 0.048%.' },
+    { q: 'Spot 83.10 / 83.14 with 3-month points 40 / 45 gives a forward of:', o: ['82.70 / 82.69', '83.50 / 83.59', '83.14 / 83.10', '83.50 / 83.55'], a: 1, e: 'Points ascending: add 0.40 to the bid and 0.45 to the ask.' },
+    { q: 'EUR/USD = 1.10 and USD/INR = 83.00. EUR/INR is:', o: ['75.45', '91.30', '84.10', '9.13'], a: 1, e: '1.10 × 83.00 = 91.30.' }
+  ],
+  revise: {
+    points: ['Direct quote = home per foreign (India: USD 1 = INR 83). Indirect = 1/direct.', 'Bank buys at bid, sells at ask; customer sells at bid, buys at ask.', '% spread = (Ask − Bid)/Ask × 100.', 'Forward points ascending: add; descending: subtract. Cross rate: A/C = A/B × B/C; invert and swap bid/ask when needed.'],
+    tip: 'Draw the chain for cross rates and mark which quote is inverted before calculating.',
+    memory: 'Bank buys low, sells high. Customer: sells at bid, buys at ask.',
+    qs: [{ q: 'Distinguish direct from indirect quotes and explain bid-ask spread.', a: 'Direct: home currency per unit of foreign; indirect: foreign per unit of home (1/direct). Banks quote bid (buy) and ask (sell); spread is the dealer margin, narrow for liquid pairs.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 6 */
+LESSONS.push({
+  id: 'arb', icon: '6', title: 'Arbitrage',
+  sub: 'Locational, triangular and covered interest arbitrage: riskless profit that keeps rates in line.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p><span class="term">Arbitrage</span> is the simultaneous purchase and sale of a currency (or related asset) in different markets to profit from a price difference, with no net investment and no risk. Arbitrage forces rates back into line, so it is the mechanism that makes the parity theories work.</p>` },
+    { h: '1. Locational (two-point) arbitrage', html: `
+      <p>The same currency is quoted at different rates in two financial centres. Buy where it is cheap and sell where it is expensive. Buying pressure raises the price in the cheap market and selling pressure lowers it in the dear market until the rates converge.</p>` },
+    { h: '2. Triangular arbitrage', html: `
+      <p>Occurs when the cross rate quoted in the market differs from the cross rate implied by two other rates. It involves three currencies.</p>
+      <p><b>Exam approach:</b> compute the implied cross rate; compare it with the quoted rate; choose the path that sells the overpriced currency and buys the underpriced one.</p>` },
+    { h: '3. Covered interest arbitrage (CIA)', html: `
+      <p>Exploits a deviation from interest rate parity by borrowing in one currency, investing in another and covering the exchange risk with a forward contract. The process pushes the forward rate and the interest rates back toward parity.</p>
+      <div class="tw"><table>
+        <tr><th>Type</th><th>Currencies</th><th>Trigger</th></tr>
+        <tr><td>Locational</td><td>One currency, two centres</td><td>Different quotes in two places</td></tr>
+        <tr><td>Triangular</td><td>Three currencies</td><td>Quoted cross rate ≠ implied cross rate</td></tr>
+        <tr><td>Covered interest</td><td>Two currencies, spot and forward</td><td>Forward rate ≠ IRP rate</td></tr>
+      </table></div>` }
+  ],
+  examples: [
+    { t: 'Locational arbitrage', s: 'Mumbai: USD/INR = 83.00. London (converted): USD/INR = 83.30. Trade USD 1,000,000.',
+      steps: ['Buy USD 1,000,000 in Mumbai: cost = ₹8,30,00,000.', 'Sell in London at 83.30: receive ₹8,33,00,000.', 'Profit = ₹3,00,000.'],
+      r: 'Riskless profit of ₹3,00,000; the two rates then converge.' },
+    { t: 'Triangular arbitrage', s: 'USD/INR = 83.00, EUR/USD = 1.1000, market EUR/INR = 92.00. Start with ₹91,30,000.',
+      steps: ['Implied EUR/INR = 1.10 × 83 = 91.30; the market 92.00 is higher, so EUR is overpriced in INR.', 'INR → USD at 83.00: 91,30,000 / 83 = USD 110,000.', 'USD → EUR at 1.10: 110,000 / 1.10 = EUR 100,000.', 'EUR → INR at 92.00: 100,000 × 92 = ₹92,00,000.'],
+      r: 'Profit = ₹70,000 (0.77%), riskless.' },
+    { t: 'Covered interest arbitrage', s: 'Spot 83.00; 1-year forward (market) 84.50; INR rate 7%; USD rate 3%. IRP forward = 83 × 1.07 / 1.03 = 86.22.',
+      steps: ['The market forward (84.50) is below the IRP forward (86.22), so the INR investment is attractive.', 'Borrow USD 100,000 at 3%: owe USD 103,000 after one year. Convert at 83.00: ₹83,00,000.', 'Invest at 7%: ₹88,81,000 at maturity. Buy USD 103,000 forward at 84.50: ₹87,03,500.', 'Profit = 88,81,000 − 87,03,500 = ₹1,77,500.'],
+      r: 'Riskless profit of ₹1,77,500, which pushes the forward up and INR interest down until parity.' }
+  ],
+  scenes: [
+    { title: 'Locational arbitrage', cap: 'Buy dollars where they are cheap (Mumbai at 83.00) and sell where they are dear (London at 83.30): ₹3,00,000 profit on USD 1 million.',
+      items: [['box', 30, 110, 190, 80, 'Mumbai|USD at 83.00', 'b', 16], ['box', 480, 110, 190, 80, 'London|USD at 83.30', 'c', 16], ['box', 265, 230, 170, 56, 'Profit ₹3,00,000', 'a', 15],
+        ['arr', 220, 140, 480, 140, 'buy $ here, sell $ there', 'n'], ['coin', 220, 165, 480, 165, '$', 'a'],
+        ['arr', 125, 190, 280, 235, '', 'n'], ['arr', 575, 190, 420, 235, '', 'n']] },
+    { title: 'Triangular arbitrage', cap: 'Because the market EUR/INR of 92.00 exceeds the implied 91.30, go INR to USD to EUR and sell euros for rupees: ₹70,000 profit.',
+      items: [['box', 255, 25, 190, 60, 'USD|110,000', 'b', 17], ['box', 40, 235, 190, 60, 'INR|91,30,000', 'a', 17], ['box', 470, 235, 190, 60, 'EUR|100,000', 'c', 17],
+        ['arr', 120, 235, 270, 85, '÷ 83.00', 'a'], ['arr', 430, 85, 560, 235, '÷ 1.10', 'b'], ['arr', 470, 270, 230, 270, '× 92.00 = ₹92,00,000', 'c'],
+        ['coin', 150, 205, 270, 100, '₹', 'a'], ['coin', 450, 105, 560, 215, '$', 'b'], ['coin', 450, 270, 250, 270, '€', 'c']] },
+    { title: 'Covered interest arbitrage in five steps', cap: 'Borrow USD at 3%, swap to INR at spot, invest at 7%, and lock the repayment with a forward at 84.50 to lock in ₹1,77,500.',
+      items: [['box', 30, 45, 190, 80, '1. Borrow|USD 100,000 at 3%', 'a', 14.5], ['box', 255, 45, 190, 80, '2. Convert at 83.00|₹83,00,000', 'a', 14.5], ['box', 480, 45, 190, 80, '3. Invest at 7%|₹88,81,000 at maturity', 'b', 14],
+        ['box', 480, 195, 190, 80, '4. Buy USD 103,000|forward at 84.50', 'c', 14], ['box', 255, 195, 190, 80, '5. Profit|₹1,77,500', 'b', 16],
+        ['arr', 220, 85, 255, 85, '', 'n'], ['arr', 445, 85, 480, 85, '', 'n'], ['arr', 575, 125, 575, 195, '', 'n'], ['arr', 480, 235, 445, 235, '', 'n']] }
+  ],
+  quiz: [
+    { q: 'Arbitrage involves:', o: ['Net investment and high risk', 'Simultaneous buying and selling to earn riskless profit', 'Holding currency for a year', 'Only central-bank action'], a: 1, e: 'It requires no net investment and no risk.' },
+    { q: 'USD/INR is 83.00 in Mumbai and 83.30 in London. On USD 1,000,000 the locational profit is:', o: ['₹30,000', '₹3,00,000', '₹30,00,000', '₹83,00,000'], a: 1, e: '1,000,000 × 0.30 = ₹3,00,000.' },
+    { q: 'Triangular arbitrage arises when:', o: ['Two cities quote different USD rates', 'The quoted cross rate differs from the implied cross rate', 'Interest rates are equal', 'A central bank intervenes'], a: 1, e: 'The quoted cross rate departs from the one implied by two other rates.' },
+    { q: 'Implied EUR/INR = 91.30; market = 92.00. EUR is:', o: ['Underpriced in INR', 'Overpriced in INR, so sell EUR', 'Fairly priced', 'Pegged'], a: 1, e: 'Market rate above implied means EUR is overpriced; sell EUR and buy USD or INR.' },
+    { q: 'In covered interest arbitrage the exchange risk is removed with:', o: ['A forward contract', 'A tariff', 'Higher spread', 'A quota'], a: 0, e: 'The forward cover locks the repayment rate.' }
+  ],
+  revise: {
+    points: ['Arbitrage = simultaneous buy and sell for riskless profit; makes parity theories work.', 'Locational: same currency, two centres. Triangular: three currencies, quoted vs implied cross rate. Covered interest: borrow, convert, invest, cover forward.', 'Triangular approach: implied cross, compare, sell overpriced currency.', 'CIA example profit: ₹1,77,500; triangular: ₹70,000; locational: ₹3,00,000.'],
+    tip: 'Number every step of the arbitrage cycle and finish with the profit and the force that removes it.',
+    memory: 'Locational = Location. Triangular = Three. Covered = Cover (forward).',
+    qs: [{ q: 'Distinguish triangular arbitrage from covered interest arbitrage.', a: 'Triangular involves three currencies and a mismatch between the quoted and implied cross rate. Covered interest arbitrage involves two currencies, borrows in one and invests in the other with forward cover, and exploits a deviation from interest rate parity.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 7 */
+LESSONS.push({
+  id: 'ppp', icon: '7', title: 'Purchasing Power Parity (PPP)',
+  sub: 'Why inflation differences move exchange rates: absolute PPP, relative PPP and their limits.',
+  learn: [
+    { h: 'Core idea', html: `
+      <p>Exchange rates adjust so that an identical basket of goods costs the same in every country when expressed in a common currency. Inflation differences therefore drive exchange-rate changes. PPP rests on the law of one price and arbitrage in goods.</p>` },
+    { h: 'Absolute and relative PPP', html: `
+      <h3>(a) Absolute PPP</h3>
+      <div class="fx">S = P(domestic) / P(foreign)</div>
+      <p>If a basket costs ₹8,300 in India and $100 in the US, the PPP rate is 8,300 / 100 = ₹83 per USD.</p>
+      <h3>(b) Relative PPP</h3>
+      <p>The percentage change in the exchange rate equals the inflation differential.</p>
+      <div class="fx">S₁ / S₀ = (1 + π_h) / (1 + π_f)<br>Approximation: % change in S ≈ π_h − π_f</div>
+      <p>The higher-inflation currency depreciates.</p>` },
+    { h: 'Limitations of PPP', html: `
+      <ul>
+        <li>Non-tradable goods and services (haircuts, rent) are not arbitraged.</li>
+        <li>Transport costs, tariffs, taxes and trade barriers.</li>
+        <li>Product differentiation and different consumption baskets.</li>
+        <li>Capital flows and speculation often dominate in the short run.</li>
+        <li>PPP holds better in the long run, and for high-inflation economies, than in the short run.</li>
+      </ul>
+      <div class="callout">Evidence: the "Big Mac Index" is a popular, light-hearted PPP test.</div>` }
+  ],
+  examples: [
+    { t: 'Absolute PPP rate', s: 'A basket costs ₹8,300 in India and $100 in the US.',
+      steps: ['PPP rate = 8,300 / 100 = ₹83 per USD.', 'If the market rate is ₹90, the rupee is undervalued relative to PPP.', 'If the market rate is ₹80, the rupee is overvalued.'],
+      r: 'PPP rate = ₹83/USD.' },
+    { t: 'Relative PPP forecast', s: 'Spot USD/INR = 83. Inflation: India 6%, US 2%.',
+      steps: ['Expected spot = 83 × 1.06 / 1.02.', '= 83 × 1.03922 = ₹86.25.', 'USD/INR rises about 3.9%, so the higher-inflation currency (INR) depreciates.'],
+      r: 'Expected spot ≈ ₹86.25 per USD.' },
+    { t: 'Practice problem (a)', s: 'Spot GBP/INR = 105.00. UK inflation 3%, India inflation 5%. Forecast the 1-year spot using relative PPP.',
+      steps: ['India is home, so π_h = 5% and π_f = 3%.', 'S₁ = 105 × 1.05 / 1.03.', '= 110.25 / 1.03 = ₹107.04.'],
+      r: 'Expected GBP/INR = ₹107.04; the rupee weakens because Indian inflation is higher.' }
+  ],
+  scenes: [
+    { title: 'One basket, one price', cap: 'A basket costing ₹8,300 in India and $100 in the US implies ₹83 per dollar under absolute PPP.',
+      items: [['box', 40, 90, 240, 90, 'India basket|₹8,300', 'a', 18], ['box', 420, 90, 240, 90, 'US basket|$100', 'c', 18],
+        ['t', 350, 135, '÷', 34, 'middle', 'n'], ['box', 215, 230, 270, 60, 'PPP rate = ₹83 per $', 'b', 18]] },
+    { title: 'Inflation pushes the currency', cap: 'With inflation of 6% in India and 2% in the US, the expected rate rises from 83 to about 86.25: the rupee depreciates.',
+      items: [['t', 350, 34, 'USD/INR (axis truncated)', 14, 'middle', 'm'],
+        ['bar', 150, 290, 130, 120, 'Spot today', 'a', '83.00'], ['bar', 320, 290, 130, 165, 'Expected spot', 'd', '86.25'],
+        ['t', 560, 150, 'India 6%|US 2%', 17, 'middle', 'n'], ['t', 560, 205, 'higher inflation →|weaker currency', 14, 'middle', 'd']] },
+    { title: 'Why PPP fails in the short run', cap: 'Non-tradables, transport costs, trade barriers, different baskets and capital flows keep exchange rates away from PPP for long periods.',
+      items: [['box', 255, 135, 190, 70, 'PPP gap|in the short run', 'a', 17],
+        ...G(['Non-tradable|goods', 'Transport costs,|tariffs, taxes', 'Different|baskets'], 1, 30, 35, 190, 64, 0, 28, ['d', 'd', 'd'], 14),
+        ...G(['Capital flows|and speculation', 'Product|differentiation', 'Works better|in the long run'], 1, 480, 35, 190, 64, 0, 28, ['c', 'd', 'b'], 14),
+        ['arr', 220, 67, 265, 150, '', 'n'], ['arr', 220, 170, 255, 170, '', 'n'], ['arr', 220, 267, 265, 195, '', 'n'],
+        ['arr', 480, 67, 435, 150, '', 'n'], ['arr', 480, 170, 445, 170, '', 'n'], ['arr', 480, 267, 435, 195, '', 'n']] }
+  ],
+  quiz: [
+    { q: 'Under absolute PPP, a basket costs ₹8,300 in India and $100 in the US. The PPP rate is:', o: ['₹8.3 per USD', '₹83 per USD', '₹830 per USD', '₹0.012 per USD'], a: 1, e: '8,300 / 100 = 83.' },
+    { q: 'Spot 83, India inflation 6%, US inflation 2%. The expected spot is about:', o: ['₹79.7', '₹86.25', '₹83', '₹89'], a: 1, e: '83 × 1.06 / 1.02 = 86.25.' },
+    { q: 'According to PPP, the currency of the higher-inflation country will:', o: ['Appreciate', 'Depreciate', 'Stay fixed', 'Be pegged'], a: 1, e: 'Higher inflation erodes purchasing power, so the currency depreciates.' },
+    { q: 'Which is NOT a limitation of PPP?', o: ['Non-tradable goods', 'Transport costs and tariffs', 'Identical baskets and no barriers in all countries', 'Capital flows and speculation'], a: 2, e: 'Identical baskets and no barriers are PPP\'s assumptions, not limitations.' },
+    { q: 'GBP/INR 105, UK inflation 3%, India 5%. Relative PPP gives:', o: ['₹107.04', '₹102.9', '₹110.25', '₹107.52'], a: 0, e: '105 × 1.05 / 1.03 = 107.04. (107.52 is the IRP answer.)' }
+  ],
+  revise: {
+    points: ['PPP: identical basket costs the same in all countries in a common currency.', 'Absolute PPP: S = P_h / P_f. Relative PPP: S₁ = S₀ (1 + π_h)/(1 + π_f).', 'Higher-inflation currency depreciates.', 'Limitations: non-tradables, transport and tariffs, different baskets, capital flows; better in the long run.'],
+    tip: 'State assumptions (no transaction costs, no barriers), write the formula, calculate, and interpret which currency depreciates.',
+    memory: 'Inflation up, currency down.',
+    qs: [{ q: 'Explain PPP, its limitations and apply it to forecast a future spot rate.', a: 'Absolute and relative PPP; relative PPP: S₁ = S₀ (1 + π_h)/(1 + π_f). Example: 83 × 1.06/1.02 = 86.25. Limitations: non-tradables, transport costs, barriers, different baskets, capital flows; holds best in the long run.' }]
+  }
+});
+/* ------------------------------------------------------------------ 8 */
+LESSONS.push({
+  id: 'irp', icon: '8', title: 'Interest Rate Parity (IRP)',
+  sub: 'Why the forward premium or discount equals the interest differential: covered and uncovered parity.',
+  learn: [
+    { h: 'Core idea', html: `
+      <p>The forward premium or discount on a currency equals the interest-rate differential between the two countries. Investors should earn the same return on <i>covered</i> investments, whichever currency they choose.</p>` },
+    { h: '(a) Covered interest rate parity (CIRP)', html: `
+      <div class="fx">F / S = (1 + i_h) / (1 + i_f)<br>Approximation: (F − S) / S ≈ i_h − i_f</div>
+      <ul>
+        <li>The currency with the <b>higher interest rate trades at a forward discount</b>; the one with the lower interest rate trades at a forward premium.</li>
+        <li>If parity does not hold, covered interest arbitrage is possible.</li>
+      </ul>
+      <p>Example: spot USD/INR = 83; i(INR) = 7%, i(USD) = 3%. Forward (1 year) = 83 × 1.07 / 1.03 = 86.22. USD is at a forward premium and INR at a forward discount.</p>` },
+    { h: '(b) Uncovered interest rate parity (UIP)', html: `
+      <p>The expected future spot rate replaces the forward rate.</p>
+      <div class="fx">E(S₁) / S₀ = (1 + i_h) / (1 + i_f)</div>
+      <p>No forward cover is taken, so the investor bears exchange-rate risk. UIP is about <b>expectations</b>, not an arbitrage condition.</p>
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>Covered IRP</th><th>Uncovered IRP</th></tr>
+        <tr><td>Rate used</td><td>Forward rate F</td><td>Expected spot E(S₁)</td></tr>
+        <tr><td>Exchange risk</td><td>Hedged</td><td>Borne by investor</td></tr>
+        <tr><td>Nature</td><td>Enforced by arbitrage</td><td>Statement about expectations</td></tr>
+      </table></div>` },
+    { h: 'Limitations', html: `
+      <ul><li>Transaction costs (bid-ask spreads).</li><li>Capital controls and taxes.</li><li>Differing risk and political risk.</li><li>Imperfect substitutability of assets.</li></ul>` }
+  ],
+  examples: [
+    { t: 'Forward rate under IRP', s: 'Spot USD/INR = 83; i(INR) = 7%, i(USD) = 3%; 1 year.',
+      steps: ['F = 83 × 1.07 / 1.03.', '= 83 × 1.03883 = ₹86.22.', 'F > S, so USD is at a premium and INR at a discount.'],
+      r: 'IRP forward = ₹86.22; the higher-rate currency (INR) is at a forward discount.' },
+    { t: 'Detecting an arbitrage opportunity', s: 'Market 1-year forward = 84.50, but IRP gives 86.22 (data above).',
+      steps: ['The market forward is below the IRP forward by 1.72.', 'Buying USD forward is cheap, so borrowing USD and investing in INR with forward cover pays (see lesson 6: ₹1,77,500 on USD 100,000).', 'Arbitrage lifts the forward and trims INR interest until F = 86.22.'],
+      r: 'Deviation from CIRP creates a riskless profit that eliminates itself.' },
+    { t: 'Practice problem (b)', s: 'Spot GBP/INR = 105.00. UK rate 4%, India rate 6.5%. Find the 1-year forward under IRP.',
+      steps: ['F = 105 × 1.065 / 1.04.', '= 111.825 / 1.04 = ₹107.52.', 'GBP is at a forward premium because India\'s interest rate is higher.'],
+      r: '1-year forward GBP/INR = ₹107.52.' }
+  ],
+  scenes: [
+    { title: 'Two ways to earn, one result', cap: 'Invest ₹100 at 7% in India, or convert, invest in the US at 3% and sell dollars forward at the IRP rate: both give the same covered return.',
+      items: [['box', 255, 25, 190, 56, '₹100 today', 'a', 17],
+        ['box', 25, 150, 250, 80, 'India route|₹100 × 1.07 = ₹107', 'b', 15], ['box', 345, 150, 330, 80, 'US route (covered)|$ at 3%, sold forward at 86.22|= ₹107', 'c', 13.5],
+        ['arr', 290, 81, 150, 150, '', 'n'], ['arr', 410, 81, 510, 150, '', 'n'], ['t', 350, 275, 'Same covered return: that is interest rate parity', 15, 'middle', 'n']] },
+    { title: 'Higher interest rate, forward discount', cap: 'India pays 7% and the US 3%, so the forward USD/INR is above spot: INR (higher rate) is at a forward discount.',
+      items: [['t', 350, 34, 'USD/INR (axis truncated)', 14, 'middle', 'm'],
+        ['bar', 140, 290, 130, 110, 'Spot', 'a', '83.00'], ['bar', 310, 290, 130, 160, '1-year forward|(IRP)', 'b', '86.22'],
+        ['t', 570, 140, 'i(INR) 7%|i(USD) 3%', 17, 'middle', 'n'], ['t', 570, 200, 'INR at forward|discount', 15, 'middle', 'd']] },
+    { title: 'Covered versus uncovered parity', cap: 'Covered parity uses the forward rate and is enforced by arbitrage; uncovered parity uses the expected spot rate and bears exchange risk.',
+      items: [['band', 25, 35, 315, 270, 'a'], ['band', 360, 35, 315, 270, 'c'],
+        ['t', 182, 68, 'Covered IRP', 18, 'middle', 'a'], ['t', 517, 68, 'Uncovered IRP', 18, 'middle', 'c'],
+        ['box', 55, 110, 255, 60, 'F / S = (1+i_h)/(1+i_f)', 'a', 15], ['box', 390, 110, 255, 60, 'E(S₁) / S₀ = (1+i_h)/(1+i_f)', 'c', 14],
+        ['t', 182, 215, 'Hedged · arbitrage-enforced', 14, 'middle', 'm'], ['t', 517, 215, 'Unhedged · expectations only', 14, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'Covered interest rate parity states:', o: ['F / S = (1 + i_h) / (1 + i_f)', 'F = S', 'S = P_h / P_f', 'i = r + π'], a: 0, e: 'The forward premium reflects the interest differential.' },
+    { q: 'Spot 83, i(INR) 7%, i(USD) 3%. The IRP 1-year forward is about:', o: ['79.8', '86.22', '88.81', '83.00'], a: 1, e: '83 × 1.07 / 1.03 = 86.22.' },
+    { q: 'The currency with the higher interest rate trades at a forward:', o: ['Premium', 'Discount', 'Par always', 'Peg'], a: 1, e: 'Higher interest is offset by a forward discount.' },
+    { q: 'Uncovered IRP differs from covered IRP because it:', o: ['Uses the expected spot rate and bears exchange risk', 'Uses the forward rate', 'Needs no interest rates', 'Is enforced by arbitrage'], a: 0, e: 'UIP is about expectations; no forward cover is taken.' },
+    { q: 'GBP/INR 105, UK 4%, India 6.5%. IRP forward is:', o: ['₹107.04', '₹107.52', '₹102.5', '₹109.2'], a: 1, e: '105 × 1.065 / 1.04 = 107.52.' }
+  ],
+  revise: {
+    points: ['CIRP: F/S = (1+i_h)/(1+i_f); approx (F−S)/S ≈ i_h − i_f.', 'Higher-interest currency at forward discount; lower-interest at premium.', 'UIP: E(S₁)/S₀ = (1+i_h)/(1+i_f); about expectations, not arbitrage.', 'Limits: transaction costs, controls, taxes, risk, imperfect substitutes.'],
+    tip: 'Write CIRP, compute F, then decide premium or discount from the interest-rate gap.',
+    memory: 'High interest rate = forward discount.',
+    qs: [{ q: 'Using IRP, calculate the forward rate and show covered interest arbitrage.', a: 'F = S (1+i_h)/(1+i_f) = 83 × 1.07/1.03 = 86.22. If the market forward is 84.50, borrow USD, convert, invest in INR and buy USD forward: profit ₹1,77,500 on USD 100,000.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 9 */
+LESSONS.push({
+  id: 'fisher', icon: '9', title: 'Fisher Effect and International Fisher Effect',
+  sub: 'How nominal interest rates carry inflation, and why high-interest currencies are expected to weaken.',
+  learn: [
+    { h: 'Fisher Effect (closed economy)', html: `
+      <p>Irving Fisher's insight: the nominal interest rate consists of the real interest rate plus expected inflation.</p>
+      <div class="fx">(1 + i) = (1 + r) × (1 + π)<br>Approximation: i ≈ r + π</div>
+      <p>The assumption is that real interest rates are determined by real factors (productivity, thrift) and are equal across countries because capital is mobile. So differences in nominal rates reflect differences in expected inflation.</p>` },
+    { h: 'International Fisher Effect (IFE)', html: `
+      <p>The IFE combines the Fisher Effect with PPP. The expected change in the spot rate equals the nominal interest-rate differential. The currency with the higher interest rate is expected to depreciate, because the higher nominal rate compensates for higher expected inflation.</p>
+      <div class="fx">E(S₁) / S₀ = (1 + i_h) / (1 + i_f)<br>Approximation: % expected change in S ≈ i_h − i_f</div>
+      <p><b>Implication:</b> on average, investors cannot gain by investing in high-interest currencies, because the exchange loss offsets the higher interest. It is a statement about unbiased expectations, not a risk-free rule, and empirical evidence is mixed in the short term (the "carry trade" often profits for periods).</p>` },
+    { h: 'Fisher versus IFE', html: `
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>Fisher Effect</th><th>International Fisher Effect</th></tr>
+        <tr><td>Scope</td><td>Within one country</td><td>Between two countries</td></tr>
+        <tr><td>Relates</td><td>Nominal rate, real rate, inflation</td><td>Interest differential and expected spot change</td></tr>
+        <tr><td>Combines with</td><td>Capital mobility</td><td>PPP</td></tr>
+        <tr><td>Key result</td><td>i ≈ r + π</td><td>Higher-rate currency expected to depreciate</td></tr>
+      </table></div>` }
+  ],
+  examples: [
+    { t: 'Real interest rate', s: 'Nominal rate 10%, expected inflation 6%.',
+      steps: ['(1 + r) = 1.10 / 1.06 = 1.0377.', 'r = 3.77%.', 'Approximation: 10% − 6% = 4%.'],
+      r: 'Exact real rate = 3.77%; the approximation (4%) is slightly high.' },
+    { t: 'Expected spot under IFE', s: 'Spot USD/INR = 83; i(INR) = 7%, i(USD) = 3%.',
+      steps: ['Expected change = 1.07 / 1.03 − 1 = 3.88%.', 'Expected spot = 83 × 1.0388 = ₹86.22.', 'The rupee is expected to depreciate about 3.9%.'],
+      r: 'An investor earning 7% in India gets about the same as 3% in the US after the currency loss.' },
+    { t: 'Does the carry trade break IFE?', s: 'An investor borrows USD at 3%, invests in INR at 7% unhedged, and the rupee depreciates only 1% in a year.',
+      steps: ['Interest gain: 7% − 3% = 4%.', 'Currency loss: about 1%.', 'Net gain ≈ 3% (IFE predicted a 3.88% depreciation, so net ≈ 0).'],
+      r: 'The carry trade can profit for periods; IFE holds only on average and carries real exchange risk.' }
+  ],
+  scenes: [
+    { title: 'Nominal rate = real rate + inflation', cap: 'A 10% nominal rate with 6% expected inflation implies a real return of about 3.77%.',
+      items: [['box', 40, 120, 160, 80, 'Real rate|3.77%', 'b', 17], ['t', 225, 160, '+', 32, 'middle', 'n'], ['box', 250, 120, 190, 80, 'Expected|inflation 6%', 'd', 17], ['t', 462, 160, '≈', 32, 'middle', 'n'], ['box', 490, 120, 170, 80, 'Nominal|rate 10%', 'a', 17],
+        ['t', 350, 250, '(1 + i) = (1 + r)(1 + π)', 16, 'middle', 'm']] },
+    { title: 'High interest, expected depreciation', cap: 'India pays 7% and the US 3%. The 3.88% expected rupee depreciation cancels the extra interest on average.',
+      items: [['t', 350, 34, 'Percent per year', 14, 'middle', 'm'],
+        ['bar', 110, 290, 110, 70, 'US interest', 'c', '3%'], ['bar', 250, 290, 110, 163, 'India interest', 'b', '7%'], ['bar', 390, 290, 110, 90, 'Expected INR|depreciation', 'd', '3.88%'],
+        ['t', 595, 150, 'Extra interest|≈ currency loss', 15, 'middle', 'n']] },
+    { title: 'How Fisher and PPP combine', cap: 'Fisher links interest differences to inflation differences; PPP links inflation differences to exchange-rate changes; together they give the IFE.',
+      items: [['box', 30, 120, 190, 80, 'Fisher Effect|interest ↔ inflation', 'a', 15], ['box', 270, 120, 160, 80, 'PPP|inflation ↔ spot', 'c', 15], ['box', 480, 120, 190, 80, 'International|Fisher Effect', 'b', 16],
+        ['t', 245, 160, '+', 30, 'middle', 'n'], ['t', 455, 160, '=', 30, 'middle', 'n'],
+        ['t', 350, 250, 'Interest differential ≈ expected change in the spot rate', 15, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'The Fisher Effect states that:', o: ['Nominal rate = real rate + expected inflation', 'Spot = forward', 'Real rate is always zero', 'Forward = expected spot'], a: 0, e: '(1 + i) = (1 + r)(1 + π), approximately i = r + π.' },
+    { q: 'Nominal 10%, expected inflation 6%. The exact real rate is about:', o: ['4.00%', '3.77%', '16.6%', '6.0%'], a: 1, e: '1.10 / 1.06 − 1 = 3.77%.' },
+    { q: 'IFE says the currency with the higher nominal interest rate is expected to:', o: ['Appreciate', 'Depreciate', 'Stay fixed', 'Be unaffected'], a: 1, e: 'The higher rate compensates for expected depreciation or inflation.' },
+    { q: 'Spot 83, i(INR) 7%, i(USD) 3%. The IFE expected spot is about:', o: ['₹79.8', '₹86.22', '₹88.8', '₹83'], a: 1, e: '83 × 1.07 / 1.03 = 86.22.' },
+    { q: 'The IFE combines the Fisher Effect with:', o: ['Covered IRP', 'PPP', 'Bretton Woods', 'Triangular arbitrage'], a: 1, e: 'Fisher plus PPP gives the International Fisher Effect.' }
+  ],
+  revise: {
+    points: ['Fisher: (1+i) = (1+r)(1+π); real rates equal across countries.', 'IFE: E(S₁)/S₀ = (1+i_h)/(1+i_f); higher-interest currency expected to depreciate.', 'IFE = Fisher + PPP; about unbiased expectations, not a risk-free rule.', 'Carry trade can profit for periods; evidence is mixed in the short run.'],
+    tip: 'Link the three: PPP (inflation), Fisher (interest), IFE (expected spot). Write the chain in one line.',
+    memory: 'Fisher = interest vs inflation (one country). IFE = interest vs spot (two countries).',
+    qs: [{ q: 'Explain the Fisher Effect and the IFE with their relationship to PPP and IRP.', a: 'Fisher: i ≈ r + π. IFE: expected change in spot ≈ i_h − i_f, derived by combining Fisher with PPP. IRP replaces expected spot with the forward rate; if all hold, the forward is an unbiased predictor of the future spot.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 10 */
+LESSONS.push({
+  id: 'chain', icon: '10', title: 'How the Parities Link, Formula Sheet and Exam Tips',
+  sub: 'The equilibrium chain, every formula in one place, and how to write high-scoring answers.',
+  learn: [
+    { h: 'How the parities link together', html: `
+      <div class="tw"><table>
+        <tr><th>Relationship</th><th>Links</th><th>Equation</th><th>Enforced by</th></tr>
+        <tr><td>Relative PPP</td><td>Inflation differential and expected spot change</td><td>E(S₁)/S₀ = (1+π_h)/(1+π_f)</td><td>Goods arbitrage</td></tr>
+        <tr><td>Fisher Effect</td><td>Nominal rate, real rate, inflation</td><td>(1+i) = (1+r)(1+π)</td><td>Capital mobility (within a country)</td></tr>
+        <tr><td>International Fisher Effect</td><td>Interest differential and expected spot change</td><td>E(S₁)/S₀ = (1+i_h)/(1+i_f)</td><td>Investor expectations</td></tr>
+        <tr><td>Covered IRP</td><td>Interest differential and forward premium</td><td>F/S = (1+i_h)/(1+i_f)</td><td>Covered interest arbitrage</td></tr>
+        <tr><td>Unbiased forward rate</td><td>Forward rate and expected spot</td><td>F = E(S₁)</td><td>Speculation</td></tr>
+      </table></div>
+      <div class="callout good"><b>The equilibrium chain:</b> inflation differential (PPP) = interest-rate differential (Fisher/IFE) = forward premium or discount (IRP) = expected change in the spot rate. If all hold, the forward rate is an unbiased predictor of the future spot rate.</div>` },
+    { h: 'Quick formula sheet', html: `
+      <div class="tw"><table>
+        <tr><th>Concept</th><th>Formula</th></tr>
+        <tr><td>Bid-ask spread (%)</td><td>(Ask − Bid) / Ask × 100</td></tr>
+        <tr><td>Forward premium/discount (annualised %)</td><td>[(F − S)/S] × (12/n) × 100</td></tr>
+        <tr><td>Cross rate (A/C from A/B and B/C)</td><td>A/C = A/B × B/C</td></tr>
+        <tr><td>Indirect quote</td><td>1 / Direct quote</td></tr>
+        <tr><td>Relative PPP</td><td>S₁ = S₀ × (1 + π_h) / (1 + π_f)</td></tr>
+        <tr><td>Covered IRP</td><td>F = S × (1 + i_h) / (1 + i_f)</td></tr>
+        <tr><td>Fisher Effect</td><td>(1 + i) = (1 + r)(1 + π)</td></tr>
+        <tr><td>International Fisher Effect</td><td>E(S₁) = S₀ × (1 + i_h) / (1 + i_f)</td></tr>
+      </table></div>` },
+    { h: 'Exam tips and likely questions', html: `
+      <p><b>Short answers:</b> define the forex market and list participants; spot vs forward; direct vs indirect quotes and bid-ask spread; triangular vs covered interest arbitrage; absolute vs relative PPP.</p>
+      <p><b>Long answers and numericals:</b></p>
+      <ol>
+        <li>Explain the functions of the foreign exchange market.</li>
+        <li>Compute cross rates (bid-ask) and identify triangular arbitrage profit.</li>
+        <li>Using IRP, calculate the forward rate and show covered interest arbitrage.</li>
+        <li>Explain PPP, its limitations and apply it to forecast a future spot rate.</li>
+        <li>Explain the Fisher Effect and IFE with their relationship to PPP and IRP.</li>
+      </ol>
+      <div class="callout">Exam-writing advice: always state the assumption (no transaction costs, perfect capital mobility), write the formula first, show the calculation, and close with a one-line interpretation (which currency appreciates or depreciates, and why).</div>` }
+  ],
+  examples: [
+    { t: 'Practice problem (a): relative PPP', s: 'Spot GBP/INR = 105.00. UK inflation 3%, India 5%.',
+      steps: ['Formula: S₁ = S₀ × (1 + π_h)/(1 + π_f), with India as home.', '= 105 × 1.05 / 1.03.', '= ₹107.04.'],
+      r: 'Forecast spot = ₹107.04; the rupee depreciates because Indian inflation is higher.' },
+    { t: 'Practice problem (b): IRP forward', s: 'Same data, with UK interest rate 4% and India 6.5%.',
+      steps: ['Formula: F = S × (1 + i_h)/(1 + i_f).', '= 105 × 1.065 / 1.04.', '= ₹107.52.'],
+      r: '1-year forward = ₹107.52; GBP is at a forward premium because India\'s rate is higher.' },
+    { t: 'Check the chain with real numbers', s: 'Inflation: India 6%, US 2%. Interest: India 7%, US 3%. Spot 83.',
+      steps: ['PPP: 1.06 / 1.02 − 1 = 3.92%.', 'IFE and IRP: 1.07 / 1.03 − 1 = 3.88%.', 'Both imply a rupee depreciation of about 3.9%, so the chain roughly holds.'],
+      r: 'Inflation, interest and forward premium differentials line up at about 3.9%.' }
+  ],
+  scenes: [
+    { title: 'The equilibrium chain', cap: 'Inflation differential, interest differential, forward premium and expected spot change are all equal if every parity holds.',
+      items: [...G(['Inflation|differential|(PPP)', 'Interest|differential|(Fisher / IFE)', 'Forward|premium /|discount (IRP)', 'Expected change|in spot rate'], 4, 10, 110, 140, 100, 40, 0, ['d', 'b', 'a', 'c'], 12.5),
+        ['t', 170, 160, '=', 26, 'middle', 'n'], ['t', 350, 160, '=', 26, 'middle', 'n'], ['t', 530, 160, '=', 26, 'middle', 'n'],
+        ['t', 350, 270, 'If all hold, the forward rate is an unbiased predictor of the future spot', 14, 'middle', 'm']] },
+    { title: 'Numbers line up', cap: 'With inflation of 6% versus 2% and interest of 7% versus 3%, both differentials imply about a 3.9% rupee depreciation.',
+      items: [['t', 350, 34, 'Percent', 14, 'middle', 'm'],
+        ['bar', 140, 290, 130, 157, 'PPP|(6% vs 2%)', 'd', '3.92%'], ['bar', 310, 290, 130, 155, 'IFE / IRP|(7% vs 3%)', 'b', '3.88%'],
+        ['t', 570, 160, 'About equal:|chain roughly holds', 15, 'middle', 'n']] },
+    { title: 'A high-scoring answer in four moves', cap: 'State the assumption, write the formula, show the calculation, and close with a one-line interpretation.',
+      items: G(['1. State the|assumption', '2. Write the|formula', '3. Show the|calculation', '4. Interpret in|one line'], 4, 10, 110, 140, 100, 40, 0, ['a', 'c', 'b', 'd'], 14).concat([['arr', 152, 160, 188, 160, '', 'n'], ['arr', 332, 160, 368, 160, '', 'n'], ['arr', 512, 160, 548, 160, '', 'n']]) }
+  ],
+  quiz: [
+    { q: 'If all parity conditions hold, the forward rate is:', o: ['An unbiased predictor of the future spot rate', 'Always equal to spot', 'Always above spot', 'Unrelated to expected spot'], a: 0, e: 'F = E(S₁) is the unbiased forward rate condition.' },
+    { q: 'GBP/INR 105, UK inflation 3%, India 5%. Forecast spot by relative PPP:', o: ['₹107.52', '₹107.04', '₹110.25', '₹103.0'], a: 1, e: '105 × 1.05 / 1.03 = 107.04.' },
+    { q: 'Same data, UK rate 4%, India 6.5%. IRP forward:', o: ['₹107.04', '₹107.52', '₹112.4', '₹104.6'], a: 1, e: '105 × 1.065 / 1.04 = 107.52.' },
+    { q: 'Which pair of relationships is enforced by arbitrage?', o: ['Covered IRP (covered interest arbitrage) and relative PPP (goods arbitrage)', 'Only IFE', 'Only the Fisher Effect', 'Neither'], a: 0, e: 'Covered IRP is enforced by covered interest arbitrage; PPP by goods arbitrage. IFE rests on expectations.' },
+    { q: 'The best way to close a numerical answer is:', o: ['Leave the number alone', 'A one-line interpretation (which currency appreciates or depreciates, and why)', 'Redraw the formula', 'Change the assumptions'], a: 1, e: 'Examiners reward the interpretation after the calculation.' }
+  ],
+  revise: {
+    points: ['Chain: inflation differential = interest differential = forward premium = expected spot change.', 'Eight core formulas: spread, premium, cross rate, indirect quote, relative PPP, CIRP, Fisher, IFE.', 'PPP and CIRP are enforced by arbitrage; Fisher/IFE by capital mobility and expectations.', 'Answer structure: assumption, formula, calculation, interpretation.'],
+    tip: 'Memorise the formula sheet as pairs: (1 + home) over (1 + foreign) appears in PPP, IRP and IFE.',
+    memory: 'Home over foreign: (1 + h) / (1 + f) in PPP, IRP and IFE.',
+    qs: [{ q: 'Explain how PPP, Fisher, IFE and IRP link together.', a: 'PPP links inflation differential to expected spot change; Fisher links nominal interest to inflation; IFE links interest differential to expected spot change; covered IRP links interest differential to forward premium. The chain: inflation differential = interest differential = forward premium = expected change in spot.' }]
+  }
+});
+/* =====================================================================
+   ENGINE: state, rendering, scene player, quiz
+   ===================================================================== */
+const KEY = 'ifm-unit2-studio-v1';
+const TABS = [['learn', 'Learn'], ['watch', 'Watch'], ['examples', 'Examples'], ['quiz', 'Quiz'], ['revise', 'Revise']];
+const SCENE_MS = 7500;
+const MOCK = { id: 'mock', icon: '★', title: 'Unit II mock test', sub: 'Twelve mixed questions drawn from all ten topics, including numericals. A fresh set every attempt.', mock: true };
+
+let state = loadState();
+const quizRun = {};            // in-memory quiz progress per lesson id
+let player = { i: 0, playing: true, timer: null };
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && typeof s === 'object' && s.done) return { cur: s.cur || 0, tab: s.tab || 'learn', done: s.done, best: s.best || {} };
+  } catch (e) { /* storage unavailable or empty */ }
+  return { cur: 0, tab: 'learn', done: {}, best: {} };
+}
+function saveState() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function allItems() { return LESSONS.concat([MOCK]); }
+function curLesson() { return allItems()[state.cur] || LESSONS[0]; }
+function isDone(id, tab) { return !!(state.done[id] && state.done[id][tab]); }
+function setDone(id, tab, v) { state.done[id] = state.done[id] || {}; state.done[id][tab] = v !== false; saveState(); }
+function lessonCount(id) { return TABS.filter((t) => isDone(id, t[0])).length; }
+
+/* ---------- chrome: rail, header, tabs ---------- */
+function renderRail() {
+  const items = allItems();
+  $('route').innerHTML = items.map((L, i) => {
+    let cls = 'stop', sub = '';
+    if (L.mock) {
+      const b = state.best.mock;
+      sub = b == null ? 'Test yourself' : 'Best score ' + b + '/12';
+      if (b != null && b >= 8) cls += ' full';
+    } else {
+      const n = lessonCount(L.id);
+      sub = n + ' of 5 sections';
+      if (n === 5) cls += ' full'; else if (n > 0) cls += ' part';
+    }
+    if (i === state.cur) cls += ' cur';
+    return '<li><button class="' + cls + '" data-act="go" data-i="' + i + '"' + (i === state.cur ? ' aria-current="step"' : '') + '><span class="dot">' +
+      (cls.indexOf('full') > -1 ? '✓' : esc(L.icon)) + '</span><span class="tt">' + esc(L.title) + '<small>' + sub + '</small></span></button></li>';
+  }).join('');
+  const total = LESSONS.length * 5;
+  const got = LESSONS.reduce((a, L) => a + lessonCount(L.id), 0);
+  const pct = Math.round(got / total * 100);
+  $('ovPct').textContent = pct + '%';
+  $('ovLabel').textContent = got + ' of ' + total + ' sections done';
+  $('ovBar').style.width = pct + '%';
+}
+function renderHead() {
+  const L = curLesson();
+  $('lTitle').textContent = L.title;
+  $('lSub').textContent = L.sub;
+  $('mobTitle').textContent = L.mock ? 'Mock test' : 'Topic ' + L.icon + ' of ' + LESSONS.length;
+  document.title = L.title + ' · Unit II Forex and Exchange Rates';
+}
+function renderTabs() {
+  const L = curLesson();
+  if (L.mock) { $('tabs').innerHTML = ''; $('tabs').style.display = 'none'; return; }
+  $('tabs').style.display = '';
+  $('tabs').innerHTML = TABS.map((t) => '<button class="tab" role="tab" data-act="tab" data-tab="' + t[0] + '" aria-selected="' + (state.tab === t[0]) +
+    '">' + t[1] + '<span class="tick' + (isDone(L.id, t[0]) ? ' on' : '') + '"></span></button>').join('');
+}
+function renderNav() {
+  const items = allItems();
+  const p = state.cur > 0 ? '<button class="btn alt" data-act="go" data-i="' + (state.cur - 1) + '">Previous: ' + esc(items[state.cur - 1].title) + '</button>' : '<span></span>';
+  const n = state.cur < items.length - 1 ? '<button class="btn" data-act="go" data-i="' + (state.cur + 1) + '">Next: ' + esc(items[state.cur + 1].title) + '</button>' : '<span></span>';
+  $('lnav').innerHTML = p + n;
+}
+function updateChrome() { renderRail(); renderTabs(); }
+
+/* ---------- navigation ---------- */
+function go(i, tab) {
+  stopPlayer();
+  const max = allItems().length - 1;
+  state.cur = Math.max(0, Math.min(max, i));
+  state.tab = tab || 'learn';
+  saveState();
+  closeRail();
+  renderAll();
+  $('main').scrollIntoView({ block: 'start' });
+  try { $('main').focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+}
+function switchTab(t) {
+  stopPlayer();
+  state.tab = t; saveState();
+  renderTabs(); renderPanel(); renderRail();
+}
+function renderAll() { renderRail(); renderHead(); renderTabs(); renderPanel(); renderNav(); }
+function renderPanel() {
+  const L = curLesson(), p = $('panel');
+  if (L.mock) { p.innerHTML = ''; viewQuiz(L, true); return; }
+  if (state.tab === 'learn') viewLearn(L);
+  else if (state.tab === 'watch') viewWatch(L);
+  else if (state.tab === 'examples') viewExamples(L);
+  else if (state.tab === 'quiz') viewQuiz(L, false);
+  else viewRevise(L);
+}
+function nextTabOf(t) { const i = TABS.findIndex((x) => x[0] === t); return TABS[Math.min(i + 1, TABS.length - 1)][0]; }
+function doneButton(L, tab, label) {
+  const on = isDone(L.id, tab);
+  return '<div class="ctaRow"><button class="btn" data-act="markdone" data-tab="' + tab + '">' + (on ? 'Marked as done. Continue' : label) + '</button>' +
+    (on ? '<button class="btn alt" data-act="unmark" data-tab="' + tab + '">Undo</button><span class="badge">Section complete</span>' : '') + '</div>';
+}
+
+/* ---------- Learn / Examples / Revise ---------- */
+function viewLearn(L) {
+  $('panel').innerHTML = L.learn.map((s) => '<h3>' + esc(s.h) + '</h3>' + s.html).join('') + doneButton(L, 'learn', 'Mark as read and watch the lesson');
+}
+function viewExamples(L) {
+  $('panel').innerHTML = L.examples.map((e, i) => '<article class="ex"><h3>Example ' + (i + 1) + ': ' + esc(e.t) + '</h3><p class="sc">' + esc(e.s) +
+    '</p><ol>' + e.steps.map((s) => '<li>' + esc(s) + '</li>').join('') + '</ol><p class="res">' + esc(e.r) + '</p></article>').join('') +
+    doneButton(L, 'examples', 'Mark examples as studied');
+}
+function viewRevise(L) {
+  const r = L.revise;
+  $('panel').innerHTML = '<h3>Key points</h3><ul class="kp">' + r.points.map((p) => '<li>' + esc(p) + '</li>').join('') + '</ul>' +
+    '<div class="rgrid"><div class="rcard"><b>Exam tip</b>' + esc(r.tip) + '</div><div class="rcard"><b>Memory trick</b>' + esc(r.memory) + '</div></div>' +
+    '<h3>Likely exam questions</h3>' + r.qs.map((q) => '<details class="qa"><summary>' + esc(q.q) + '</summary><p>' + esc(q.a) + '</p></details>').join('') +
+    doneButton(L, 'revise', 'Mark revision as done');
+}
+
+/* ---------- scene renderer ---------- */
+const TONE = { a: 'a', b: 'b', c: 'c', d: 'd', n: 'n', m: 'n' };
+function lines(txt, x, y, fs, cls, anchor, lh) {
+  const parts = String(txt).split('|'), lhh = lh || fs * 1.22, y0 = y - (parts.length - 1) * lhh / 2;
+  return '<text class="' + cls + '" x="' + x + '" y="' + y0 + '" font-size="' + fs + '" text-anchor="' + (anchor || 'middle') + '" dominant-baseline="central" font-weight="600">' +
+    parts.map((p, i) => '<tspan x="' + x + '" dy="' + (i ? lhh : 0) + '">' + esc(p) + '</tspan>').join('') + '</text>';
+}
+function renderScene(sc) {
+  let out = '<svg viewBox="0 0 700 340" role="img" aria-label="' + esc(sc.title) + '" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' + ['a', 'b', 'c', 'd', 'n'].map((k) => '<marker id="ah' + k + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="solid' + k.toUpperCase() + '"/></marker>').join('') + '</defs>';
+  sc.items.forEach((it, i) => {
+    const k = it[0], d = (i * 0.28).toFixed(2) + 's';
+    const st = 'style="animation-delay:' + d + '"';
+    if (k === 'band') {
+      out += '<rect class="it band f' + TONE[it[5]] + '" ' + st + ' x="' + it[1] + '" y="' + it[2] + '" width="' + it[3] + '" height="' + it[4] + '" rx="16" stroke-width="1.5"/>';
+    } else if (k === 'box') {
+      const t = TONE[it[6]], fs = it[7] || 14;
+      out += '<g class="it" ' + st + '><rect class="f' + t + '" x="' + it[1] + '" y="' + it[2] + '" width="' + it[3] + '" height="' + it[4] + '" rx="12" stroke-width="2"/>' +
+        lines(it[5], it[1] + it[3] / 2, it[2] + it[4] / 2, fs, 'tn', 'middle') + '</g>';
+    } else if (k === 't') {
+      out += '<g class="it" ' + st + '>' + lines(it[3], it[1], it[2], it[4] || 14, 't' + (TONE[it[6]] === 'n' ? (it[6] === 'm' ? 'm' : 'n') : TONE[it[6]]), it[5] || 'middle') + '</g>';
+    } else if (k === 'arr') {
+      const t = TONE[it[6]], len = Math.round(Math.hypot(it[3] - it[1], it[4] - it[2]));
+      out += '<g class="it" ' + st + '><line class="s' + (t === 'n' ? 'n' : t) + ' draw" style="--len:' + len + ';animation-delay:' + d + '" x1="' + it[1] + '" y1="' + it[2] + '" x2="' + it[3] + '" y2="' + it[4] +
+        '" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah' + t + ')"/>';
+      if (it[5]) out += lines(it[5], (it[1] + it[3]) / 2, (it[2] + it[4]) / 2 - 12, 12.5, 'tm', 'middle');
+      out += '</g>';
+    } else if (k === 'line') {
+      out += '<line class="it s' + TONE[it[5]] + '" ' + st + ' x1="' + it[1] + '" y1="' + it[2] + '" x2="' + it[3] + '" y2="' + it[4] + '" stroke-width="2.5"' + (it[6] ? ' stroke-dasharray="7 6"' : '') + '/>';
+    } else if (k === 'coin') {
+      const t = TONE[it[6]];
+      out += '<g class="coin" style="--dx:' + (it[3] - it[1]) + 'px;--dy:' + (it[4] - it[2]) + 'px;animation-delay:' + (0.8 + i * 0.28).toFixed(2) + 's"><circle class="solid' + t.toUpperCase() + '" cx="' + it[1] + '" cy="' + it[2] + '" r="15"/>' +
+        '<text x="' + it[1] + '" y="' + it[2] + '" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#fff">' + esc(it[5]) + '</text></g>';
+    } else if (k === 'bar') {
+      const t = TONE[it[6]], x = it[1], base = it[2], w = it[3], h = it[4];
+      out += '<g><rect class="bar solid' + t.toUpperCase() + '" style="animation-delay:' + d + '" x="' + x + '" y="' + (base - h) + '" width="' + w + '" height="' + h + '" rx="8"/></g>' +
+        '<g class="it" ' + st + '>' + lines(it[5], x + w / 2, base + 22, 13, 'tn', 'middle') + (it[7] ? lines(it[7], x + w / 2, base - h - 14, 15, 't' + t, 'middle') : '') + '</g>';
+    }
+  });
+  return out + '</svg>';
+}
+
+/* ---------- Watch: video-style player ---------- */
+function viewWatch(L) {
+  const n = L.scenes.length;
+  player = { i: 0, playing: true, timer: null };
+  $('panel').innerHTML = '<div class="stage" id="stage"></div>' +
+    '<div class="capbox"><h3 id="cTitle"></h3><p id="cText"></p></div>' +
+    '<div class="seg" id="seg">' + L.scenes.map((s, i) => '<button data-act="scene" data-i="' + i + '" aria-label="Scene ' + (i + 1) + ': ' + esc(s.title) + '"></button>').join('') + '</div>' +
+    '<div class="ctl"><button class="ghost" data-act="sprev" aria-label="Previous scene">◀ Prev</button><button class="ghost" data-act="splay" id="playBtn">Pause</button>' +
+    '<button class="ghost" data-act="snext" aria-label="Next scene">Next ▶</button><button class="ghost" data-act="sreplay">Replay</button><span class="sceneno" id="sNo"></span></div>' +
+    '<div class="callout info" style="margin-top:18px">Watch all ' + n + ' scenes to complete this section. Tap a bar to jump between scenes.</div>';
+  showScene(L, 0);
+}
+function showScene(L, i) {
+  clearTimeout(player.timer);
+  const n = L.scenes.length;
+  player.i = Math.max(0, Math.min(n - 1, i));
+  const sc = L.scenes[player.i];
+  $('stage').innerHTML = renderScene(sc);
+  $('cTitle').textContent = sc.title;
+  $('cText').textContent = sc.cap;
+  $('sNo').textContent = 'Scene ' + (player.i + 1) + ' of ' + n;
+  const seg = $('seg');
+  seg.classList.toggle('paused', !player.playing);
+  Array.prototype.forEach.call(seg.children, (b, k) => {
+    b.className = k < player.i ? 'done' : (k === player.i ? 'act' : '');
+    if (k === player.i) b.style.setProperty('--dur', SCENE_MS + 'ms');
+  });
+  $('playBtn').textContent = player.playing ? 'Pause' : 'Play';
+  if (player.i === n - 1) { if (!isDone(L.id, 'watch')) { setDone(L.id, 'watch'); updateChrome(); } }
+  if (player.playing && player.i < n - 1) {
+    player.timer = setTimeout(() => showScene(L, player.i + 1), SCENE_MS);
+  } else if (player.i === n - 1) {
+    player.playing = false; $('playBtn').textContent = 'Play'; seg.classList.add('paused');
+    Array.prototype.forEach.call(seg.children, (b, k) => { b.className = 'done'; });
+  }
+}
+function stopPlayer() { clearTimeout(player.timer); player.playing = false; }
+
+/* ---------- Quiz ---------- */
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function newRun(L, isMock) {
+  let qs;
+  if (isMock) {
+    qs = shuffle(LESSONS.reduce((acc, l) => acc.concat(l.quiz.map((q) => Object.assign({ from: l.title }, q))), [])).slice(0, 12);
+  } else qs = L.quiz.map((q) => q);
+  quizRun[L.id] = { qs: qs, i: 0, score: 0, picked: null, wrong: [], finished: false };
+}
+function viewQuiz(L, isMock) {
+  if (!quizRun[L.id]) newRun(L, isMock);
+  const r = quizRun[L.id], p = $('panel');
+  if (r.finished) {
+    const total = r.qs.length, pass = isMock ? 8 : 3;
+    const msg = r.score === total ? 'Perfect score.' : r.score >= pass ? 'Good work. You have passed this quiz.' : 'Review the Learn and Revise tabs, then try again.';
+    p.innerHTML = '<div class="result"><h3>Quiz complete</h3><div class="score">' + r.score + ' / ' + total + '</div><p>' + msg + ' Best so far: <b>' + (state.best[L.id] == null ? r.score : state.best[L.id]) + ' / ' + total + '</b>.</p>' +
+      (r.wrong.length ? '<h3>Questions to revisit</h3>' + r.wrong.map((w) => '<div class="rev"><b>' + esc(w.q) + '</b><br>Correct answer: ' + esc(w.ans) + '<br>' + esc(w.e) + (w.from ? '<br><i>Topic: ' + esc(w.from) + '</i>' : '') + '</div>').join('') : '') +
+      '<div class="ctaRow"><button class="btn" data-act="retry">' + (isMock ? 'Start a new mock test' : 'Retry quiz') + '</button>' +
+      (!isMock ? '<button class="btn alt" data-act="tab" data-tab="revise">Go to revision notes</button>' : '') + '</div></div>';
+    return;
+  }
+  const q = r.qs[r.i], letters = ['A', 'B', 'C', 'D', 'E'], answered = r.picked !== null;
+  p.innerHTML = '<div class="qcard"><div class="qmeta"><span>Question ' + (r.i + 1) + ' of ' + r.qs.length + '</span><span>Score ' + r.score + '</span></div>' +
+    '<h3>' + esc(q.q) + '</h3><div class="opts" role="group" aria-label="Answer choices">' +
+    q.o.map((o, k) => {
+      let c = 'opt';
+      if (answered) { if (k === q.a) c += ' ok'; else if (k === r.picked) c += ' no'; }
+      return '<button class="' + c + '" data-act="pick" data-k="' + k + '"' + (answered ? ' disabled' : '') + '><span class="l">' + letters[k] + '</span><span>' + esc(o) + '</span></button>';
+    }).join('') + '</div>' +
+    (answered ? '<div class="fb2 ' + (r.picked === q.a ? 'ok' : 'no') + '"><b>' + (r.picked === q.a ? 'Correct.' : 'Not quite.') + '</b> ' + esc(q.e) + '</div>' +
+      '<div class="ctaRow"><button class="btn" data-act="qnext">' + (r.i === r.qs.length - 1 ? 'See result' : 'Next question') + '</button></div>' : '') + '</div>';
+}
+function pickAnswer(k) {
+  const L = curLesson(), r = quizRun[L.id];
+  if (!r || r.picked !== null || r.finished) return;
+  const q = r.qs[r.i];
+  r.picked = k;
+  if (k === q.a) r.score++; else r.wrong.push({ q: q.q, ans: q.o[q.a], e: q.e, from: q.from });
+  viewQuiz(L, !!L.mock);
+}
+function nextQuestion() {
+  const L = curLesson(), r = quizRun[L.id];
+  if (!r || r.picked === null) return;
+  if (r.i < r.qs.length - 1) { r.i++; r.picked = null; }
+  else {
+    r.finished = true;
+    if (state.best[L.id] == null || r.score > state.best[L.id]) state.best[L.id] = r.score;
+    if (!L.mock && r.score >= 3) setDone(L.id, 'quiz');
+    saveState(); updateChrome();
+  }
+  viewQuiz(L, !!L.mock);
+}
+
+/* ---------- side drawer, theme, reset ---------- */
+function openRail() { $('rail').classList.add('open'); $('menuBtn').setAttribute('aria-expanded', 'true'); }
+function closeRail() { $('rail').classList.remove('open'); $('menuBtn').setAttribute('aria-expanded', 'false'); }
+function applyTheme(t) { if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem(KEY + '-theme', next); } catch (e) { /* ignore */ }
+}
+
+/* ---------- event delegation ---------- */
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.getAttribute('data-act'), L = curLesson();
+  if (act === 'go') go(parseInt(el.getAttribute('data-i'), 10));
+  else if (act === 'tab') { const t = el.getAttribute('data-tab'); if (L.mock) return; switchTab(t); }
+  else if (act === 'markdone') { const t = el.getAttribute('data-tab'); setDone(L.id, t); updateChrome(); if (!(t === 'revise')) switchTab(nextTabOf(t)); else { renderPanel(); } }
+  else if (act === 'unmark') { setDone(L.id, el.getAttribute('data-tab'), false); updateChrome(); renderPanel(); }
+  else if (act === 'pick') pickAnswer(parseInt(el.getAttribute('data-k'), 10));
+  else if (act === 'qnext') nextQuestion();
+  else if (act === 'retry') { newRun(L, !!L.mock); viewQuiz(L, !!L.mock); }
+  else if (act === 'scene') { player.playing = false; showScene(L, parseInt(el.getAttribute('data-i'), 10)); }
+  else if (act === 'snext') { showScene(L, player.i + 1); }
+  else if (act === 'sprev') { showScene(L, player.i - 1); }
+  else if (act === 'splay') {
+    if (player.i === L.scenes.length - 1 && !player.playing) { player.playing = true; showScene(L, 0); }
+    else { player.playing = !player.playing; showScene(L, player.i); }
+  }
+  else if (act === 'sreplay') { player.playing = true; showScene(L, 0); }
+});
+$('menuBtn').addEventListener('click', () => { $('rail').classList.contains('open') ? closeRail() : openRail(); });
+$('closeRail').addEventListener('click', closeRail);
+$('themeBtn').addEventListener('click', toggleTheme);
+$('resetBtn').addEventListener('click', () => {
+  if (!window.confirm('Reset all progress and quiz scores?')) return;
+  state = { cur: 0, tab: 'learn', done: {}, best: {} };
+  Object.keys(quizRun).forEach((k) => delete quizRun[k]);
+  saveState(); renderAll();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRail(); });
+
+/* ---------- boot ---------- */
+(function boot() {
+  try { const t = localStorage.getItem(KEY + '-theme'); if (t) applyTheme(t); } catch (e) { /* ignore */ }
+  if (state.cur >= allItems().length) state.cur = 0;
+  renderAll();
+})();
+</script>
+</body>
+</html>
