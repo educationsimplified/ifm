@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Unit I · International Finance Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EAF0EC;--surface:#F8FBF9;--surface2:#EFF5F1;--ink:#12261F;--muted:#55675F;--line:#C6D5CC;
+  --a:#3B3FD8;--a-soft:#E2E3FA;--b:#0C7F65;--b-soft:#D3EEE5;--c:#B97B05;--c-soft:#F7EAC6;--d:#C23B48;--d-soft:#F8DCDF;
+  --shadow:0 1px 2px rgba(18,38,31,.08),0 8px 24px rgba(18,38,31,.06);
+  --serif:"Newsreader",Georgia,"Times New Roman",serif;
+  --sans:"Schibsted Grotesk",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0C1513;--surface:#13201D;--surface2:#182925;--ink:#E3EEE8;--muted:#96AAA1;--line:#264038;
+    --a:#9094FF;--a-soft:#212559;--b:#4FD3AE;--b-soft:#12392F;--c:#F0B84A;--c-soft:#46370F;--d:#FF7F8B;--d-soft:#4A1E25;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0C1513;--surface:#13201D;--surface2:#182925;--ink:#E3EEE8;--muted:#96AAA1;--line:#264038;
+  --a:#9094FF;--a-soft:#212559;--b:#4FD3AE;--b-soft:#12392F;--c:#F0B84A;--c-soft:#46370F;--d:#FF7F8B;--d-soft:#4A1E25;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 8px 24px rgba(0,0,0,.3);color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px);height:100%}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:var(--serif);font-size:18px;line-height:1.62}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--a);outline-offset:2px;border-radius:6px}
+.app{display:grid;grid-template-columns:310px minmax(0,1fr);min-height:100vh}
+
+/* ---------- route rail ---------- */
+.rail{position:sticky;top:env(safe-area-inset-top,0px);align-self:start;height:100vh;overflow:auto;padding:26px 20px 24px 24px;border-right:1px solid var(--line);background:var(--surface2);font-family:var(--sans)}
+.brand h1{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.12;margin:0 0 4px;letter-spacing:-.01em}
+.brand p{margin:0;color:var(--muted);font-size:14px}
+.overall{margin:18px 0 6px;font-size:13px;color:var(--muted);display:flex;justify-content:space-between}
+.meter{height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:var(--b);border-radius:99px;transition:width .5s}
+.route{list-style:none;margin:20px 0 0;padding:0;position:relative}
+.route::before{content:"";position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:repeating-linear-gradient(var(--line) 0 6px,transparent 6px 11px)}
+.route li{position:relative}
+.stop{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;background:none;border:0;padding:8px 8px 8px 0;border-radius:10px}
+.stop:hover{background:color-mix(in srgb,var(--a) 7%,transparent)}
+.dot{flex:none;width:28px;height:28px;border-radius:50%;background:var(--surface);border:2px solid var(--line);display:grid;place-items:center;font-size:12px;font-weight:700;color:var(--muted);position:relative;z-index:1}
+.stop.part .dot{border-color:var(--c);color:var(--c)}
+.stop.full .dot{background:var(--b);border-color:var(--b);color:#fff}
+.stop.cur .dot{box-shadow:0 0 0 4px color-mix(in srgb,var(--a) 28%,transparent);border-color:var(--a)}
+.stop.cur.full .dot{border-color:var(--b)}
+.stop .tt{font-size:14.5px;font-weight:600;line-height:1.3;padding-top:3px}
+.stop.cur .tt{color:var(--a)}
+.stop small{display:block;font-weight:400;color:var(--muted);font-size:12.5px}
+.railfoot{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+.ghost{font-family:var(--sans);font-size:13px;font-weight:600;background:transparent;border:1px solid var(--line);color:var(--ink);padding:7px 12px;border-radius:99px}
+.ghost:hover{border-color:var(--a);color:var(--a)}
+
+/* ---------- main ---------- */
+.mobbar{display:none}
+.main{min-width:0;padding:30px clamp(18px,4vw,56px) 60px;max-width:1040px;width:100%}
+.lhead h2{font-size:clamp(30px,4.2vw,46px);line-height:1.08;margin:0 0 8px;font-weight:600;letter-spacing:-.015em}
+.lhead p{margin:0;color:var(--muted);max-width:62ch}
+.tabs{display:flex;gap:6px;margin:24px 0 22px;border-bottom:1px solid var(--line);overflow-x:auto;font-family:var(--sans)}
+.tab{background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;font-weight:600;font-size:15px;color:var(--muted);white-space:nowrap;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--a);border-bottom-color:var(--a)}
+.tab .tick{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:7px;background:var(--line)}
+.tab .tick.on{background:var(--b)}
+.panel{min-height:300px}
+.panel h3{font-family:var(--sans);font-size:21px;margin:30px 0 8px;letter-spacing:-.005em}
+.panel h3:first-child{margin-top:0}
+.panel p{margin:0 0 14px;max-width:68ch}
+.panel ul,.panel ol{max-width:68ch;padding-left:22px;margin:0 0 16px}
+.panel li{margin-bottom:6px}
+.panel b,.panel strong{font-weight:600}
+.term{background:var(--a-soft);padding:0 5px;border-radius:5px}
+.callout{border-left:4px solid var(--c);background:var(--c-soft);padding:12px 16px;border-radius:0 10px 10px 0;margin:16px 0;max-width:68ch;font-size:17px}
+.callout.good{border-color:var(--b);background:var(--b-soft)}
+.callout.bad{border-color:var(--d);background:var(--d-soft)}
+.callout.info{border-color:var(--a);background:var(--a-soft)}
+.tw{overflow-x:auto;max-width:100%;margin:12px 0 20px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:520px;font-family:var(--sans);font-size:14.5px;line-height:1.45}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface2);font-weight:700}
+tr:last-child td{border-bottom:0}
+.ctaRow{margin-top:30px;display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-family:var(--sans)}
+.btn{background:var(--a);color:#fff;border:0;padding:11px 20px;border-radius:99px;font-weight:600;font-size:15px;font-family:var(--sans)}
+.btn:hover{filter:brightness(1.08)}
+.btn.alt{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.alt:hover{border-color:var(--a);color:var(--a)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.badge{font-family:var(--sans);font-size:13px;font-weight:600;color:var(--b)}
+
+/* ---------- video-style stage ---------- */
+.stage{position:relative;background:var(--surface);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.stage svg{display:block;width:100%;height:auto;font-family:var(--sans)}
+.capbox{margin:14px 0 8px;min-height:92px}
+.capbox h3{margin:0 0 4px!important;font-size:19px!important}
+.capbox p{margin:0;color:var(--muted);max-width:none}
+.seg{display:flex;gap:6px;margin:6px 0 12px}
+.seg button{flex:1;height:8px;border-radius:99px;border:0;background:var(--line);padding:0;position:relative;overflow:hidden}
+.seg button.done{background:var(--b)}
+.seg button.act::after{content:"";position:absolute;inset:0;background:var(--a);transform-origin:left;transform:scaleX(0);animation:fill var(--dur,7s) linear forwards}
+.seg.paused button.act::after{animation-play-state:paused}
+@keyframes fill{to{transform:scaleX(1)}}
+.ctl{display:flex;gap:8px;flex-wrap:wrap;font-family:var(--sans);align-items:center}
+.ctl .ghost{min-width:44px}
+.sceneno{margin-left:auto;font-size:13px;color:var(--muted);font-family:var(--sans)}
+
+/* svg scene elements */
+.it{opacity:0;animation:pop .6s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.96)}to{opacity:1;transform:none}}
+.it{transform-box:fill-box;transform-origin:center}
+.bar{transform-box:fill-box;transform-origin:bottom;opacity:0;animation:grow .9s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes grow{from{opacity:1;transform:scaleY(.02)}to{opacity:1;transform:scaleY(1)}}
+.draw{stroke-dasharray:var(--len);stroke-dashoffset:var(--len);animation:dash .8s ease-out forwards}
+@keyframes dash{to{stroke-dashoffset:0}}
+.coin{animation:travel 2.4s ease-in-out infinite;opacity:0}
+@keyframes travel{0%{opacity:0;transform:translate(0,0)}12%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translate(var(--dx),var(--dy))}}
+.fa{fill:var(--a-soft);stroke:var(--a)}.fb{fill:var(--b-soft);stroke:var(--b)}.fc{fill:var(--c-soft);stroke:var(--c)}.fd{fill:var(--d-soft);stroke:var(--d)}.fn{fill:var(--surface2);stroke:var(--line)}
+.sa{stroke:var(--a)}.sb{stroke:var(--b)}.sc{stroke:var(--c)}.sd{stroke:var(--d)}.sn{stroke:var(--muted)}
+.ta{fill:var(--a)}.tb{fill:var(--b)}.tc{fill:var(--c)}.td{fill:var(--d)}.tn{fill:var(--ink)}.tm{fill:var(--muted)}
+.band{opacity:.55}
+.solidA{fill:var(--a)}.solidB{fill:var(--b)}.solidC{fill:var(--c)}.solidD{fill:var(--d)}.solidN{fill:var(--muted)}
+
+/* ---------- examples ---------- */
+.ex{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px 22px;margin:0 0 18px;box-shadow:var(--shadow)}
+.ex h3{margin:0 0 6px!important}
+.ex .sc{color:var(--muted);margin:0 0 10px}
+.ex ol{margin-bottom:12px}
+.ex .res{background:var(--b-soft);border-radius:10px;padding:10px 14px;font-family:var(--sans);font-size:15px;font-weight:600;max-width:none;margin:0}
+
+/* ---------- quiz ---------- */
+.qcard{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;box-shadow:var(--shadow);max-width:760px}
+.qmeta{display:flex;justify-content:space-between;font-family:var(--sans);font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.qcard h3{font-family:var(--serif)!important;font-weight:500;font-size:22px!important;line-height:1.35;margin:0 0 16px!important}
+.opts{display:grid;gap:10px}
+.opt{text-align:left;font-family:var(--sans);font-size:16px;background:var(--surface2);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start}
+.opt .l{flex:none;width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line);display:grid;place-items:center;font-size:13px;font-weight:700}
+.opt:hover:not([disabled]){border-color:var(--a)}
+.opt.ok{border-color:var(--b);background:var(--b-soft)}
+.opt.ok .l{background:var(--b);border-color:var(--b);color:#fff}
+.opt.no{border-color:var(--d);background:var(--d-soft)}
+.opt.no .l{background:var(--d);border-color:var(--d);color:#fff}
+.opt[disabled]{cursor:default}
+.fb2{margin-top:16px;padding:12px 16px;border-radius:12px;font-size:16.5px}
+.fb2.ok{background:var(--b-soft)}.fb2.no{background:var(--d-soft)}
+.fb2 b{font-family:var(--sans)}
+.result{max-width:760px}
+.score{font-family:var(--sans);font-size:54px;font-weight:700;line-height:1;margin:8px 0}
+.rev{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:10px 0;font-size:16.5px}
+.rev b{font-family:var(--sans)}
+
+/* ---------- revise ---------- */
+.rgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin:6px 0 22px}
+.rcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-size:16.5px}
+.rcard b{font-family:var(--sans);display:block;margin-bottom:4px}
+details.qa{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin:0 0 10px;max-width:760px}
+details.qa summary{cursor:pointer;font-weight:600;font-family:var(--sans);font-size:16px}
+details.qa p{margin:10px 0 0}
+.kp li::marker{color:var(--b)}
+.lnav{display:flex;justify-content:space-between;gap:10px;margin-top:44px;padding-top:20px;border-top:1px solid var(--line);font-family:var(--sans)}
+
+/* ---------- responsive ---------- */
+@media (max-width:900px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .mobbar{display:flex;align-items:center;justify-content:space-between;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--surface2);border-bottom:1px solid var(--line);padding:10px 16px;font-family:var(--sans)}
+  .mobbar b{font-size:15px}
+  .rail{display:none;position:fixed;inset:0;height:auto;z-index:30;border-right:0;padding-top:calc(26px + env(safe-area-inset-top,0px))}
+  .rail.open{display:block}
+  body{font-size:17px}
+}
+@media (prefers-reduced-motion:reduce){
+  .it,.bar,.draw{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  .coin{animation:none!important;opacity:1}
+  .seg button.act::after{animation:none!important;transform:scaleX(1)}
+}
+</style>
+</head>
+<body>
+<div class="mobbar"><b id="mobTitle">International Finance</b><button class="ghost" id="menuBtn" aria-expanded="false" aria-controls="rail">Lessons</button></div>
+<div class="app">
+  <aside class="rail" id="rail" aria-label="Lesson route">
+    <div class="brand"><h1>International Finance</h1><p>Unit I · International Financial Management</p></div>
+    <div class="overall"><span id="ovLabel">Progress</span><span id="ovPct">0%</span></div>
+    <div class="meter"><i id="ovBar"></i></div>
+    <ol class="route" id="route"></ol>
+    <div class="railfoot">
+      <button class="ghost" id="themeBtn">Switch theme</button>
+      <button class="ghost" id="resetBtn">Reset progress</button>
+      <button class="ghost" id="closeRail">Close</button>
+    </div>
+  </aside>
+  <main class="main" id="main" tabindex="-1">
+    <header class="lhead"><h2 id="lTitle"></h2><p id="lSub"></p></header>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <section class="panel" id="panel" role="tabpanel" aria-live="polite"></section>
+    <nav class="lnav" id="lnav"></nav>
+  </main>
+</div>
+<script>
+/* =====================================================================
+   LESSON DATA (pure data – no DOM access). Scene item types:
+   ['band',x,y,w,h,tone]            ['box',x,y,w,h,'a|b',tone,fs]
+   ['t',x,y,'a|b',fs,anchor,tone]   ['arr',x1,y1,x2,y2,label,tone]
+   ['coin',x1,y1,x2,y2,symbol,tone] ['bar',x,baseY,w,h,label,tone,value]
+   ['line',x1,y1,x2,y2,tone,dashed]
+   ===================================================================== */
+const LESSONS = [];
+/* grid helper: lays out labelled boxes in rows/cols */
+function G(labels, cols, x0, y0, w, h, gx, gy, tones, fs) {
+  return labels.map((l, i) => ['box', x0 + (i % cols) * (w + gx), y0 + Math.floor(i / cols) * (h + gy), w, h, l,
+    Array.isArray(tones) ? tones[i % tones.length] : tones, fs || 13.5]);
+}
+
+/* ------------------------------------------------------------------ 1 */
+LESSONS.push({
+  id: 'overview', icon: '1', title: 'International Finance: An Overview',
+  sub: 'What international finance is, what it studies, and why every globally active business depends on it.',
+  learn: [
+    { h: 'Meaning and scope', html: `
+      <p><span class="term">International finance</span> is the branch of finance that deals with financial transactions between two or more countries. It studies how money, foreign exchange, investment and financial decisions move across national borders, and how firms, banks and governments manage the resulting opportunities and risks.</p>
+      <p>Domestic finance assumes one currency, one legal system and one set of financial markets. International finance removes all three assumptions. Once a transaction crosses a border, at least one party deals in a foreign currency, is subject to a foreign legal and tax regime, and faces a different political and economic environment.</p>
+      <div class="callout info"><b>In simple words:</b> international finance explains how money moves between countries and how businesses manage financial decisions in the global economy.</div>` },
+    { h: 'Main features', html: `
+      <ul>
+        <li><b>Foreign exchange.</b> Conversion of one country's currency into another. Every cross-border payment depends on an exchange rate, the price of one currency in terms of another.</li>
+        <li><b>International trade.</b> The financial side of exports and imports: invoicing currency, credit terms, payment instruments and settlement.</li>
+        <li><b>International investment.</b> Investing money in foreign countries, through direct investment in factories and subsidiaries or through foreign shares and bonds.</li>
+        <li><b>Exchange-rate fluctuations.</b> Changes in currency values alter the home-currency value of foreign revenues, costs, assets and liabilities, so they directly change profits.</li>
+        <li><b>International financial markets.</b> Markets in which currencies, bonds, shares and other financial assets are traded across borders.</li>
+        <li><b>Political and economic risk.</b> Changes in government policy, inflation, interest rates or political stability in other countries can change the value of a foreign business or claim.</li>
+      </ul>` },
+    { h: 'Importance of international finance', html: `
+      <ol>
+        <li>Helps companies <b>expand their business globally</b> by financing foreign operations.</li>
+        <li>Makes <b>international trade and payments</b> easier through exchange and settlement mechanisms.</li>
+        <li>Provides access to <b>foreign capital</b> and investment opportunities when domestic funds are scarce or costly.</li>
+        <li>Helps <b>manage foreign-exchange risk</b> through tools such as forwards and options.</li>
+        <li>Supports <b>economic growth and cooperation</b> between countries.</li>
+        <li>Helps <b>multinational corporations</b> manage funds across different countries.</li>
+      </ol>
+      <div class="callout">Why it is examinable: almost every later topic in this unit (the monetary system, balance of payments, trade barriers) is a closer look at one of these six features.</div>` },
+    { h: 'Classifying international financial activity', html: `
+      <div class="tw"><table>
+        <tr><th>Activity</th><th>What happens</th><th>Typical risk</th></tr>
+        <tr><td>Trade finance</td><td>Exporter or importer settles goods and services in a foreign currency</td><td>Exchange-rate and credit risk</td></tr>
+        <tr><td>Foreign investment</td><td>Firm builds a plant abroad or buys foreign securities</td><td>Political, economic and exchange risk</td></tr>
+        <tr><td>Foreign borrowing</td><td>Firm raises loans or bonds in another currency or market</td><td>Exchange-rate and interest-rate risk</td></tr>
+        <tr><td>Hedging and treasury</td><td>Firm uses financial contracts to reduce currency exposure</td><td>Cost of hedging, basis and counterparty risk</td></tr>
+      </table></div>` }
+  ],
+  examples: [
+    { t: 'Importing machinery from Germany', s: 'An Indian company buys machinery invoiced at €200,000. The exchange rate (illustrative) moves from ₹90 per euro when the order is placed to ₹95 per euro when payment is due.',
+      steps: ['Cost at order date = 200,000 × ₹90 = ₹1,80,00,000 (₹1.8 crore).', 'Cost at payment date = 200,000 × ₹95 = ₹1,90,00,000 (₹1.9 crore).', 'Difference = ₹10,00,000.'],
+      r: 'A weaker rupee raised the rupee cost by ₹10 lakh although the euro price never changed.' },
+    { t: 'An IT exporter invoices in dollars', s: 'An Indian software firm bills a US client $1,000,000. Assume the rupee is ₹83 per dollar at invoicing and strengthens to ₹80 per dollar at receipt.',
+      steps: ['Expected rupee revenue = 1,000,000 × 83 = ₹8,30,00,000.', 'Actual rupee revenue = 1,000,000 × 80 = ₹8,00,00,000.', 'Shortfall = ₹30,00,000.'],
+      r: 'A stronger home currency reduces the rupee value of foreign revenue; the exporter loses ₹30 lakh from currency movement alone.' },
+    { t: 'Same event, two viewpoints', s: 'Use the two cases above to see that exchange-rate movements do not hurt everyone equally.',
+      steps: ['A weaker rupee hurts importers (higher rupee cost) but helps exporters (more rupees per dollar).', 'A stronger rupee helps importers but hurts exporters.', 'A firm that both imports and exports in the same currency is partly naturally hedged.'],
+      r: 'Direction of exposure, not just size, determines how a firm should manage currency risk.' }
+  ],
+  scenes: [
+    { title: 'Money crosses a border', cap: 'An Indian importer orders machinery from a German exporter. The price is in euros, so rupees must be converted through the foreign-exchange market before payment.',
+      items: [['band', 20, 30, 290, 280, 'a'], ['band', 390, 30, 290, 280, 'c'],
+        ['t', 165, 62, 'India (₹)', 18, 'middle', 'a'], ['t', 535, 62, 'Germany (€)', 18, 'middle', 'c'],
+        ['box', 50, 95, 230, 60, 'Indian importer|needs machinery', 'a', 15], ['box', 420, 95, 230, 60, 'German exporter|invoice: €200,000', 'c', 15],
+        ['arr', 280, 125, 420, 125, 'order', 'n'],
+        ['box', 270, 225, 160, 56, 'Forex market|₹ → €', 'b', 15],
+        ['coin', 150, 175, 290, 235, '₹', 'a'], ['coin', 440, 250, 550, 175, '€', 'c']] },
+    { title: 'The exchange rate moves', cap: 'The euro price of the machine never changes, but when the rupee weakens from ₹90 to ₹95 per euro, the rupee cost rises by ₹10 lakh.',
+      items: [['t', 350, 38, 'Rupee cost of the same €200,000 machine (₹ lakh)', 15, 'middle', 'n'],
+        ['bar', 130, 290, 130, 180, 'At ₹90 per €', 'a', '₹180 L'], ['bar', 300, 290, 130, 190, 'At ₹95 per €', 'd', '₹190 L'],
+        ['t', 560, 170, 'Extra cost|₹10 lakh', 18, 'middle', 'd'], ['t', 560, 215, 'same machine, same euro price', 13, 'middle', 'm']] },
+    { title: 'Six features of international finance', cap: 'Every cross-border financial activity combines these features: currency conversion, trade, investment, exchange-rate movement, global markets and risk.',
+      items: [['box', 265, 135, 170, 70, 'International|finance', 'a', 17],
+        ...G(['Foreign|exchange', 'International|trade', 'International|investment'], 1, 30, 30, 190, 62, 0, 28, ['b', 'b', 'b'], 15),
+        ...G(['Rate|fluctuations', 'Global financial|markets', 'Political and|economic risk'], 1, 480, 30, 190, 62, 0, 28, ['d', 'c', 'd'], 15),
+        ['arr', 265, 150, 220, 65, '', 'n'], ['arr', 265, 170, 220, 170, '', 'n'], ['arr', 265, 190, 220, 275, '', 'n'],
+        ['arr', 435, 150, 480, 65, '', 'n'], ['arr', 435, 170, 480, 170, '', 'n'], ['arr', 435, 190, 480, 275, '', 'n']] },
+    { title: 'Why it matters', cap: 'International finance lets firms expand abroad, settle trade, reach foreign capital, manage currency risk, support growth and run group funds across borders.',
+      items: G(['Global business|expansion', 'Easier trade|payments', 'Access to foreign|capital', 'Foreign-exchange|risk management', 'Growth and|cooperation', 'Group funds|across countries'], 3, 35, 60, 190, 80, 20, 40, ['a', 'b', 'c', 'd', 'b', 'a'], 15) }
+  ],
+  quiz: [
+    { q: 'Which statement best describes international finance?', o: ['Finance that deals only with a country\'s government budget', 'Finance dealing with financial transactions and decisions across national borders', 'Finance of firms that operate only in their home market', 'The study of domestic bank lending'], a: 1, e: 'International finance studies the movement of money, foreign exchange, investment and financial decisions between countries.' },
+    { q: 'An Indian firm owes €200,000. The rupee weakens from ₹90 to ₹95 per euro. What happens to the rupee cost?', o: ['It falls by ₹10 lakh', 'It stays the same', 'It rises by ₹10 lakh', 'It rises by ₹1 lakh'], a: 2, e: '200,000 × (95 − 90) = ₹10,00,000, an increase of ₹10 lakh.' },
+    { q: 'Which of the following is NOT a feature of international finance?', o: ['Foreign exchange', 'Exchange-rate fluctuations', 'International investment', 'Operating only within one country\'s single-currency market'], a: 3, e: 'International finance is defined by cross-border activity and multiple currencies, so single-currency domestic operation is the opposite.' },
+    { q: 'An Indian exporter bills $1,000,000 and the rupee strengthens from ₹83 to ₹80 per dollar before payment. The exporter:', o: ['Receives ₹30 lakh less', 'Receives ₹30 lakh more', 'Receives the same amount', 'Receives ₹3 lakh less'], a: 0, e: '1,000,000 × 3 = ₹30,00,000 less. A stronger home currency lowers the rupee value of export revenue.' },
+    { q: 'Changes in a foreign government\'s policy, inflation or interest rates mainly create:', o: ['Political and economic risk', 'Domestic liquidity', 'Dividend policy', 'A trade surplus'], a: 0, e: 'These are the political and economic risks the notes list as a main feature of international finance.' }
+  ],
+  revise: {
+    points: ['International finance = financial transactions and decisions between two or more countries.', 'Six features: foreign exchange, international trade, international investment, exchange-rate fluctuations, international financial markets, political and economic risks.', 'Importance: global expansion, easier payments, foreign capital, exchange-risk management, growth and cooperation, MNC fund management.', 'Direction of exposure matters: a weaker home currency helps exporters and hurts importers.'],
+    tip: 'Open a definition answer with the meaning, then give the German-machinery style example. Examiners reward one worked example.',
+    memory: 'F-T-I-F-M-R: Forex, Trade, Investment, Fluctuations, Markets, Risks.',
+    qs: [{ q: 'Define international finance and list its main features.', a: 'It is the branch of finance dealing with financial transactions between countries. Features: foreign exchange, international trade, international investment, exchange-rate fluctuations, international financial markets, and political and economic risks. Add one example such as an Indian firm paying euros for imported machinery.' },
+      { q: 'Explain the importance of international finance.', a: 'It enables global expansion, eases trade and payments, gives access to foreign capital, helps manage foreign-exchange risk, supports growth and cooperation, and lets MNCs manage funds across countries.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 2 */
+LESSONS.push({
+  id: 'mnc', icon: '2', title: 'Objectives and Functions of Financial Management in an MNC',
+  sub: 'What a multinational corporation tries to achieve with its money, and the decisions its finance team makes every day.',
+  learn: [
+    { h: 'Meaning of an MNC', html: `
+      <p>A <span class="term">Multinational Corporation (MNC)</span> is a company that operates in more than one country through subsidiaries, branches, factories or offices. Examples include Tata Consultancy Services, Microsoft and Samsung.</p>
+      <p>Financial management in an MNC means <b>planning, obtaining, investing and controlling funds across different countries</b>. It has all the problems of domestic financial management plus currency, tax, legal and political differences between the countries involved.</p>` },
+    { h: 'Objectives of financial management', html: `
+      <ol>
+        <li><b>Wealth maximisation.</b> The central objective: increase the long-term value of the company for its shareholders.</li>
+        <li><b>Profit maximisation.</b> Earn higher profits by cutting costs, improving efficiency and entering profitable markets.</li>
+        <li><b>Optimum utilisation of funds.</b> Allocate funds to the countries, projects and activities that give the best returns.</li>
+        <li><b>Minimisation of financial risk.</b> Manage exchange-rate, interest-rate, political and credit risk.</li>
+        <li><b>Maintaining liquidity.</b> Hold enough cash to pay employees, suppliers, lenders and other expenses on time in every country.</li>
+        <li><b>International expansion.</b> Finance new factories, branches, subsidiaries and acquisitions abroad.</li>
+        <li><b>Tax efficiency.</b> Plan finances to reduce total tax lawfully while complying with each country's tax laws.</li>
+      </ol>
+      <h3>Wealth versus profit maximisation</h3>
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>Profit maximisation</th><th>Wealth maximisation</th></tr>
+        <tr><td>Focus</td><td>Accounting profit</td><td>Value of the firm and share price</td></tr>
+        <tr><td>Time horizon</td><td>Often short term</td><td>Long term</td></tr>
+        <tr><td>Risk</td><td>Usually ignored</td><td>Explicitly considered</td></tr>
+        <tr><td>Timing of returns</td><td>Ignored</td><td>Considered through discounting (time value of money)</td></tr>
+      </table></div>
+      <div class="callout good">Wealth maximisation is regarded as the superior objective because it accounts for risk, timing and long-term value.</div>` },
+    { h: 'Functions of financial management', html: `
+      <ol>
+        <li><b>Investment decisions.</b> Where to invest: building a factory abroad, opening a subsidiary, acquiring a foreign firm. Example: choosing between a plant in Vietnam or Thailand.</li>
+        <li><b>Financing decisions.</b> How to raise money through shares, loans, bonds or retained earnings, in which country and in which currency.</li>
+        <li><b>Dividend decisions.</b> How much profit to distribute to shareholders and how much to reinvest.</li>
+        <li><b>Foreign-exchange management.</b> Controlling the effect of currency movements on foreign income, expenses and investments.</li>
+        <li><b>Working-capital management.</b> Managing cash, inventory, receivables and short-term liabilities across countries.</li>
+        <li><b>Risk management and financial control.</b> Identifying risks, budgeting, monitoring performance and ensuring compliance with local laws.</li>
+      </ol>
+      <div class="callout">Exam tip: remember the three traditional core decisions: <b>investment, financing and dividend</b>.</div>` }
+  ],
+  examples: [
+    { t: 'Investment decision: Vietnam or Thailand', s: 'An MNC will invest $50 million in one factory. Vietnam is expected to give $15 million a year for 5 years; Thailand $14 million a year. The discount rate is 10% (annuity factor for 5 years = 3.7908).',
+      steps: ['Vietnam PV = 15 × 3.7908 = $56.86 million; NPV = 56.86 − 50 = $6.86 million.', 'Thailand PV = 14 × 3.7908 = $53.07 million; NPV = 53.07 − 50 = $3.07 million.', 'Both are positive, so both create wealth, but Vietnam creates more.'],
+      r: 'On NPV alone, choose Vietnam, after also reviewing political, currency and tax risk.' },
+    { t: 'Dividend decision', s: 'A foreign subsidiary earns a profit of $10 million. Group policy retains 60% to fund expansion.',
+      steps: ['Retained earnings = 60% × 10 = $6 million.', 'Dividend payable to the parent = 10 − 6 = $4 million.', 'Check withholding tax and exchange controls before remitting the dividend.'],
+      r: '$4 million is distributed and $6 million is reinvested.' },
+    { t: 'Working capital across countries', s: 'Subsidiary A in Singapore has surplus cash of $3 million; subsidiary B in Brazil needs $3 million for a short period.',
+      steps: ['Instead of A depositing at low rates and B borrowing at high rates, the group lends A\'s surplus to B internally.', 'This saves the interest spread and reduces external borrowing.', 'Treasury monitors currency, tax and regulatory limits on intra-group loans.'],
+      r: 'Centralised cash management raises returns and cuts financing cost.' }
+  ],
+  scenes: [
+    { title: 'The goal: shareholder wealth', cap: 'Every finance decision in an MNC is judged by one test: does it raise the long-term value of the firm for its shareholders?',
+      items: [['box', 255, 125, 190, 80, 'Shareholder|wealth', 'b', 20],
+        ['box', 40, 30, 190, 60, 'Investment|decisions', 'a', 16], ['box', 470, 30, 190, 60, 'Financing|decisions', 'c', 16], ['box', 255, 255, 190, 60, 'Dividend|decisions', 'd', 16],
+        ['arr', 190, 90, 270, 125, '', 'a'], ['arr', 510, 90, 430, 125, '', 'c'], ['arr', 350, 255, 350, 205, '', 'd']] },
+    { title: 'How funds move inside an MNC', cap: 'The parent raises capital and invests in subsidiaries; subsidiaries send back dividends, royalties and interest, while treasury shifts surplus cash to where it is needed.',
+      items: [['box', 255, 30, 190, 62, 'Parent company|raises funds', 'a', 16],
+        ['box', 40, 200, 170, 70, 'Subsidiary A|(surplus cash)', 'b', 15], ['box', 265, 200, 170, 70, 'Subsidiary B|(needs cash)', 'c', 15], ['box', 490, 200, 170, 70, 'Subsidiary C|(new plant)', 'd', 15],
+        ['arr', 300, 92, 125, 200, 'equity / loans', 'a'], ['arr', 350, 92, 350, 200, '', 'a'], ['arr', 400, 92, 575, 200, '', 'a'],
+        ['arr', 210, 235, 265, 235, '', 'b'], ['coin', 210, 235, 265, 235, '$', 'b'], ['t', 237, 290, 'internal loan', 13, 'middle', 'm']] },
+    { title: 'Profit versus wealth', cap: 'A project with quick profit but heavy risk can look good on profit alone yet lose on wealth once risk and timing are included.',
+      items: [['t', 350, 36, 'Evaluation of two projects (index)', 15, 'middle', 'n'],
+        ['bar', 80, 262, 90, 170, 'Profit|view P', 'c', '170'], ['bar', 190, 262, 90, 140, 'Profit|view Q', 'c', '140'],
+        ['bar', 390, 262, 90, 70, 'Wealth|view P', 'd', '70'], ['bar', 500, 262, 90, 120, 'Wealth|view Q', 'b', '120'],
+        ['t', 185, 322, 'Short-term profit ranks P first', 13, 'middle', 'm'], ['t', 500, 322, 'Risk-adjusted wealth ranks Q first', 13, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'The primary objective of financial management in an MNC is:', o: ['Maximising short-term accounting profit only', 'Wealth maximisation for shareholders', 'Minimising the number of subsidiaries', 'Avoiding all foreign currency'], a: 1, e: 'Wealth maximisation targets long-term shareholder value and is the central objective.' },
+    { q: 'The three traditional core financial decisions are:', o: ['Marketing, production, sales', 'Investment, financing, dividend', 'Import, export, remittance', 'Hedging, auditing, taxation'], a: 1, e: 'Investment, financing and dividend decisions are the core trio.' },
+    { q: 'Choosing between a factory in Vietnam and one in Thailand is a(n):', o: ['Dividend decision', 'Working-capital decision', 'Investment decision', 'Liquidity audit'], a: 2, e: 'Deciding where to invest long-term funds is an investment (capital budgeting) decision.' },
+    { q: 'Which is a reason wealth maximisation is preferred over profit maximisation?', o: ['It ignores risk', 'It ignores timing of cash flows', 'It considers risk, timing and long-term value', 'It focuses on the current year only'], a: 2, e: 'Wealth maximisation accounts for risk and the time value of money, while profit maximisation does not.' },
+    { q: 'A group lends one subsidiary\'s surplus cash to another subsidiary short of funds. This is mainly:', o: ['Dividend decision', 'Working-capital management', 'Profit maximisation', 'Trade barrier'], a: 1, e: 'Managing cash across subsidiaries is part of working-capital management.' }
+  ],
+  revise: {
+    points: ['MNC = company operating in more than one country via subsidiaries, branches, factories or offices.', 'Seven objectives: wealth, profit, optimum fund use, risk minimisation, liquidity, expansion, tax efficiency.', 'Six functions: investment, financing, dividend, forex management, working capital, risk management and control.', 'Wealth maximisation beats profit maximisation because it includes risk, timing and long-term value.'],
+    tip: 'Always state that the three core decisions are investment, financing and dividend, then add the MNC-specific functions of forex and risk.',
+    memory: 'Core trio = I-F-D. MNC extras = F-W-R (forex, working capital, risk).',
+    qs: [{ q: 'Explain the objectives of financial management in an MNC.', a: 'Wealth maximisation (primary), profit maximisation, optimum use of funds, minimisation of financial risk, maintaining liquidity, supporting international expansion and tax efficiency.' },
+      { q: 'Distinguish profit maximisation from wealth maximisation.', a: 'Profit maximisation focuses on short-term accounting profit and ignores risk and timing. Wealth maximisation targets long-term shareholder value and considers risk and the time value of money.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 3 */
+LESSONS.push({
+  id: 'ifmdfm', icon: '3', title: 'International vs Domestic Financial Management',
+  sub: 'Why managing money across borders is broader, riskier and more complex than managing it inside one country.',
+  learn: [
+    { h: 'Meaning', html: `
+      <ul>
+        <li><span class="term">Domestic Financial Management:</span> management of financial activities within one country and its financial system.</li>
+        <li><span class="term">International Financial Management (IFM):</span> management of financial activities involving two or more countries.</li>
+      </ul>
+      <p>The financial objective is the same, increasing the value of the firm, but IFM must reach it in an environment of several currencies, legal systems and markets.</p>` },
+    { h: 'Differences', html: `
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>Domestic</th><th>International</th></tr>
+        <tr><td>Area of operation</td><td>One country</td><td>Multiple countries</td></tr>
+        <tr><td>Currency</td><td>Generally one currency</td><td>Multiple currencies</td></tr>
+        <tr><td>Exchange-rate risk</td><td>Usually limited for domestic transactions</td><td>Significant for cross-border transactions</td></tr>
+        <tr><td>Laws and regulations</td><td>One main national legal system</td><td>Different national legal systems</td></tr>
+        <tr><td>Taxation</td><td>Mainly one country's tax rules</td><td>Multiple tax systems and treaties</td></tr>
+        <tr><td>Political risk</td><td>Primarily domestic</td><td>Across several countries</td></tr>
+        <tr><td>Capital markets</td><td>Mainly domestic</td><td>Domestic and international</td></tr>
+        <tr><td>Financial decisions</td><td>Comparatively simpler</td><td>More complex due to global factors</td></tr>
+      </table></div>` },
+    { h: 'Why the extra complexity matters', html: `
+      <p><b>Currency risk</b> turns a known foreign price into an unknown home-currency amount. <b>Legal and tax differences</b> change after-tax returns: a dividend may face withholding tax abroad and further tax at home, reduced only where a tax treaty applies. <b>Political risk</b> includes expropriation, exchange controls and sudden policy changes. <b>Market access</b> adds choice (borrowing in the cheapest market) but also adds the need to understand each market's rules.</p>
+      <div class="callout good"><b>Conclusion:</b> international financial management is broader and more complex because it must consider exchange rates, international regulations and risks in different countries.</div>` }
+  ],
+  examples: [
+    { t: 'Domestic firm becomes an exporter', s: 'A company sells only in India and is paid in rupees. It then starts exporting to the USA and is paid in dollars.',
+      steps: ['Before: receipts and payments are in rupees, so there is no currency conversion and one legal system applies.', 'After: it must convert dollars into rupees, choose payment terms, and follow US import and Indian export regulations.', 'New decisions arise: invoicing currency, hedging and documentation.'],
+      r: 'The same business moved from domestic financial management to international financial management.' },
+    { t: 'Receivable with 60 days\' credit', s: 'An exporter invoices $100,000 on 60 days\' credit at ₹83 per dollar. At payment the rate is either ₹84.5 or ₹81.5.',
+      steps: ['Invoice value at ₹83 = ₹83,00,000.', 'At ₹84.5: ₹84,50,000, a gain of ₹1,50,000.', 'At ₹81.5: ₹81,50,000, a loss of ₹1,50,000.'],
+      r: 'A domestic sale has no such uncertainty; here ±₹1.5 lakh of profit depends on the exchange rate.' },
+    { t: 'Taxation across two countries', s: 'A foreign subsidiary pays a ₹100 dividend to its parent. The foreign country charges 10% withholding tax.',
+      steps: ['Tax withheld abroad = ₹10.', 'Cash received by the parent = ₹90 before any home-country tax.', 'A tax treaty or credit system may prevent paying the same tax twice.'],
+      r: 'Multiple tax systems reduce net cash unless planned.' }
+  ],
+  scenes: [
+    { title: 'Domestic: one world', cap: 'In domestic financial management, buyer, seller, bank and regulator all sit inside one country and use one currency.',
+      items: [['band', 40, 30, 620, 280, 'a'], ['t', 350, 62, 'India only (₹)', 18, 'middle', 'a'],
+        ['box', 80, 110, 160, 60, 'Indian firm', 'a', 16], ['box', 460, 110, 160, 60, 'Indian customer', 'a', 16], ['arr', 240, 140, 460, 140, 'goods', 'n'],
+        ['coin', 460, 190, 240, 190, '₹', 'a'], ['box', 215, 235, 270, 50, 'One law · one tax system', 'a', 14]] },
+    { title: 'International: four extra layers', cap: 'Going international adds a second currency, a second legal system, a second tax regime and a second political environment.',
+      items: [['box', 255, 140, 190, 60, 'Cross-border|transaction', 'a', 16],
+        ['box', 40, 40, 190, 56, 'Multiple currencies', 'b', 15], ['box', 470, 40, 190, 56, 'Different laws', 'c', 15], ['box', 40, 245, 190, 56, 'Multiple tax systems', 'd', 15], ['box', 470, 245, 190, 56, 'Political risk abroad', 'd', 15],
+        ['arr', 230, 80, 275, 140, '', 'n'], ['arr', 470, 80, 425, 140, '', 'n'], ['arr', 230, 260, 275, 200, '', 'n'], ['arr', 470, 260, 425, 200, '', 'n']] },
+    { title: 'An export invoice over 60 days', cap: 'The invoice is fixed in dollars, but the rupee value depends on the rate on the day of payment: the profit may rise or fall.',
+      items: [['box', 40, 35, 180, 56, 'Day 0|invoice $100,000', 'a', 14], ['box', 480, 35, 180, 56, 'Day 60|payment received', 'c', 14],
+        ['arr', 220, 63, 480, 63, '60 days of credit', 'n'],
+        ['bar', 90, 290, 110, 100, 'Value at|₹83 (invoice)', 'a', '₹83.0 L'], ['bar', 230, 290, 110, 130, 'If rate|is ₹84.5', 'b', '₹84.5 L'], ['bar', 370, 290, 110, 70, 'If rate|is ₹81.5', 'd', '₹81.5 L'],
+        ['t', 590, 190, 'Gain or loss|of ₹1.5 lakh', 15, 'middle', 'n'], ['t', 590, 232, '(axis truncated|to show the gap)', 12, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'Which feature most clearly separates IFM from domestic financial management?', o: ['Presence of a balance sheet', 'Multiple currencies and exchange-rate risk', 'Use of shareholders\' funds', 'Need for working capital'], a: 1, e: 'Multiple currencies and cross-border exchange-rate risk are the defining differences.' },
+    { q: 'A company selling only in India and paid in rupees practises mainly:', o: ['International financial management', 'Domestic financial management', 'Sovereign debt management', 'Reserve management'], a: 1, e: 'One country and one currency indicates domestic financial management.' },
+    { q: '$100,000 is invoiced at ₹83. At payment the rate is ₹81.5. The exporter\'s result is:', o: ['A gain of ₹1.5 lakh', 'A loss of ₹1.5 lakh', 'No change', 'A loss of ₹15,000'], a: 1, e: '100,000 × (83 − 81.5) = ₹1,50,000 lower receipt.' },
+    { q: 'Taxation in IFM involves:', o: ['Only one country\'s rules', 'Multiple tax systems and treaties', 'No tax at all', 'Only indirect taxes'], a: 1, e: 'Cross-border firms deal with several tax systems and, often, tax treaties.' },
+    { q: 'Why is IFM considered broader than domestic financial management?', o: ['It considers exchange rates, international regulations and risks in different countries', 'It ignores risk', 'It uses only one capital market', 'It avoids cash management'], a: 0, e: 'The extra global factors make IFM broader and more complex.' }
+  ],
+  revise: {
+    points: ['Domestic = one country; IFM = two or more countries.', 'Eight comparison bases: area, currency, exchange risk, laws, taxation, political risk, capital markets, decision complexity.', 'Exporting converts a domestic firm into an IFM firm.', 'Conclusion line: IFM is broader and more complex because of exchange rates, regulations and cross-country risks.'],
+    tip: 'Present the difference as a table with at least six rows; end with the one-line conclusion.',
+    memory: 'A-C-E-L-T-P-C-F: Area, Currency, Exchange risk, Law, Tax, Politics, Capital markets, Finance decisions.',
+    qs: [{ q: 'Distinguish between international and domestic financial management.', a: 'Draw a two-column table covering area of operation, currency, exchange-rate risk, laws, taxation, political risk, capital markets and complexity, then conclude that IFM is broader and more complex.' }]
+  }
+});
+/* ------------------------------------------------------------------ 4 */
+LESSONS.push({
+  id: 'ims', icon: '4', title: 'International Monetary System',
+  sub: 'The rules, institutions and arrangements that decide how currencies are valued and how countries pay each other.',
+  learn: [
+    { h: 'Meaning and purpose', html: `
+      <p>The <span class="term">International Monetary System (IMS)</span> is the set of rules, institutions and arrangements that govern exchange rates, international payments and monetary cooperation between countries. Its main purpose is to support international trade, investment and stable financial relationships.</p>
+      <h3>Main functions</h3>
+      <ol>
+        <li>Facilitates international payments.</li>
+        <li>Provides arrangements for determining exchange rates.</li>
+        <li>Encourages international trade and investment.</li>
+        <li>Promotes monetary cooperation between countries.</li>
+        <li>Helps countries respond to balance-of-payments difficulties.</li>
+        <li>Supports international economic stability.</li>
+      </ol>` },
+    { h: 'Stage 1: The gold standard', html: `
+      <p>Under the <span class="term">gold standard</span>, each currency was linked to a fixed quantity of gold. Because every currency had a gold value, exchange rates between currencies (the <i>mint parity</i>) were relatively stable.</p>
+      <ul>
+        <li><b>Strength:</b> exchange-rate stability and an automatic adjustment mechanism. A deficit country lost gold, its money supply fell, prices fell and exports became more competitive (the price-specie-flow mechanism).</li>
+        <li><b>Weakness:</b> countries had limited flexibility in monetary policy, because money supply was tied to gold holdings; growth in the economy depended on gold supply.</li>
+      </ul>` },
+    { h: 'Stage 2: Bretton Woods (1944 to early 1970s)', html: `
+      <p>Countries maintained <b>fixed but adjustable exchange rates linked to the US dollar</b>, while the dollar was convertible into gold for foreign monetary authorities at <b>$35 per ounce</b>. The IMF and World Bank were created under this arrangement.</p>
+      <ul>
+        <li>Each member declared a par value in dollars and kept its exchange rate within a narrow band around it (typically ±1%) by central-bank intervention.</li>
+        <li>Par values could be changed only to correct a "fundamental disequilibrium".</li>
+        <li><b>Why it failed:</b> the dollar's gold convertibility became hard to sustain as US deficits grew, confidence weakened, and in 1971 the United States suspended dollar-gold convertibility. The system broke down in the early 1970s.</li>
+      </ul>` },
+    { h: 'Stage 3: The modern system', html: `
+      <p>Many major currencies now <b>float</b> according to market demand and supply, while some countries maintain fixed or managed arrangements. The system is therefore a mixture rather than a single regime.</p>
+      <div class="tw"><table>
+        <tr><th>System</th><th>Who sets the rate?</th><th>Advantage</th><th>Drawback</th></tr>
+        <tr><td>Fixed (peg)</td><td>Government/central bank pegs to another currency or a defined standard</td><td>Predictability for trade</td><td>Needs reserves; loses monetary independence</td></tr>
+        <tr><td>Floating</td><td>Market demand and supply</td><td>Automatic adjustment; policy freedom</td><td>Volatility and exchange risk</td></tr>
+        <tr><td>Managed float</td><td>Mostly market, with central-bank intervention</td><td>Smooths sharp swings</td><td>Intervention can be costly or unclear</td></tr>
+      </table></div>` }
+  ],
+  examples: [
+    { t: 'Gold standard parity', s: 'Historically, the US price of gold was about $20.67 per ounce and the UK price about £4.2474 per ounce (approximate figures used in textbooks).',
+      steps: ['Mint parity = dollars per ounce ÷ pounds per ounce.', '20.67 ÷ 4.2474 ≈ 4.87.', 'So £1 exchanged for about $4.87.'],
+      r: 'Fixing both currencies to gold fixed the sterling-dollar rate at roughly $4.87.' },
+    { t: 'Bretton Woods band', s: 'A country sets a par value of 100 units of its currency per US dollar with a ±1% permitted band.',
+      steps: ['Lower limit = 100 × 0.99 = 99.', 'Upper limit = 100 × 1.01 = 101.', 'If the market rate pushes toward 101 (currency weak), the central bank sells dollars and buys its own currency.'],
+      r: 'The rate must stay between 99 and 101 through intervention.' },
+    { t: 'Managed float in action', s: 'A currency is falling sharply because of panic selling. The central bank has foreign reserves.',
+      steps: ['The central bank sells dollars from reserves and buys its own currency.', 'Demand for the home currency rises, slowing the fall.', 'The bank does not fix a rate; it only smooths the move.'],
+      r: 'This is typical managed-float behaviour; the market still sets the broad direction.' }
+  ],
+  scenes: [
+    { title: 'Three eras of the system', cap: 'The system moved from gold, to dollar-linked fixed rates under Bretton Woods, to the modern mix of floating and managed rates.',
+      items: [['line', 60, 135, 640, 135, 'n', 1],
+        ['box', 30, 100, 190, 70, 'Gold standard|currency = gold', 'c', 14], ['box', 255, 100, 190, 70, 'Bretton Woods|1944 to early 1970s', 'a', 14], ['box', 480, 100, 190, 70, 'Modern system|float · peg · managed', 'b', 14],
+        ['t', 125, 215, 'Stable, but rigid', 14, 'middle', 'c'], ['t', 350, 215, '$ fixed to gold at $35', 14, 'middle', 'a'], ['t', 575, 215, 'Market-determined rates', 14, 'middle', 'b']] },
+    { title: 'Bretton Woods: dollar at the centre', cap: 'Currencies were pegged to the dollar, and the dollar was convertible into gold for foreign monetary authorities at $35 per ounce.',
+      items: [['box', 270, 130, 160, 70, 'US dollar|$35 = 1 oz gold', 'a', 16], ['box', 40, 40, 150, 52, 'Rupee, yen...|pegged to $', 'b', 14], ['box', 510, 40, 150, 52, 'Pound, franc...|pegged to $', 'b', 14], ['box', 275, 255, 150, 52, 'Gold', 'c', 16],
+        ['arr', 190, 75, 280, 135, '±1% band', 'n'], ['arr', 510, 75, 420, 135, '±1% band', 'n'], ['arr', 350, 200, 350, 255, 'convertible', 'a'], ['coin', 350, 250, 350, 205, '$', 'a']] },
+    { title: 'Fixed, floating or managed?', cap: 'A fixed rate stays on a line, a float moves freely with the market, and a managed float is steered back by the central bank when it swings too far.',
+      items: [['band', 30, 40, 210, 250, 'n'], ['band', 245, 40, 210, 250, 'n'], ['band', 460, 40, 210, 250, 'n'],
+        ['t', 135, 70, 'Fixed', 17, 'middle', 'a'], ['t', 350, 70, 'Floating', 17, 'middle', 'b'], ['t', 565, 70, 'Managed float', 17, 'middle', 'c'],
+        ['line', 50, 170, 220, 170, 'a'],
+        ['arr', 265, 230, 300, 130, '', 'b'], ['arr', 300, 130, 340, 220, '', 'b'], ['arr', 340, 220, 380, 110, '', 'b'], ['arr', 380, 110, 430, 200, '', 'b'],
+        ['line', 480, 120, 650, 120, 'c', 1], ['line', 480, 220, 650, 220, 'c', 1],
+        ['arr', 490, 190, 540, 130, '', 'c'], ['arr', 540, 130, 590, 205, '', 'c'], ['arr', 590, 205, 640, 150, '', 'c'],
+        ['t', 135, 265, 'Rate set by authority', 12.5, 'middle', 'm'], ['t', 350, 265, 'Rate set by market', 12.5, 'middle', 'm'], ['t', 565, 265, 'Bank leans against swings', 12.5, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'The International Monetary System is best described as:', o: ['A single global bank', 'Rules, institutions and arrangements governing exchange rates and international payments', 'A list of tariff rates', 'The balance sheet of the IMF'], a: 1, e: 'The IMS is the framework of rules, institutions and arrangements governing exchange rates, payments and cooperation.' },
+    { q: 'Under Bretton Woods, the US dollar was convertible into gold for foreign monetary authorities at:', o: ['$20.67 per ounce', '$35 per ounce', '$100 per ounce', '$1 per ounce'], a: 1, e: 'The convertibility price was $35 per ounce of gold.' },
+    { q: 'A main limitation of the gold standard was:', o: ['Unstable exchange rates', 'Limited flexibility in monetary policy', 'No link to any asset', 'Freely floating currencies'], a: 1, e: 'Money supply was tied to gold, which restricted monetary-policy flexibility.' },
+    { q: 'A system in which the currency mostly follows the market but the central bank may intervene is a:', o: ['Gold standard', 'Pure fixed peg', 'Managed float', 'Currency embargo'], a: 2, e: 'That is the definition of a managed float.' },
+    { q: 'A par value of 100 per dollar with a ±1% band permits rates between:', o: ['90 and 110', '99 and 101', '95 and 105', '100 and 101 only'], a: 1, e: '100 × 0.99 = 99 and 100 × 1.01 = 101.' }
+  ],
+  revise: {
+    points: ['IMS = rules, institutions and arrangements for exchange rates, payments and cooperation.', 'Six functions: payments, exchange-rate arrangements, trade and investment, cooperation, BoP support, stability.', 'Gold standard: currency tied to gold, stable but rigid. Bretton Woods (1944 to early 1970s): fixed-but-adjustable dollar pegs, $35/oz. Modern: float, peg or managed float.', 'Fixed = pegged; floating = market; managed float = market with intervention.'],
+    tip: 'Draw a three-box timeline (gold, Bretton Woods, modern system) and add one line for the mechanism and one for the weakness of each.',
+    memory: 'G-B-M: Gold, Bretton Woods, Modern. Dollar price of gold in Bretton Woods: 35.',
+    qs: [{ q: 'Trace the evolution of the international monetary system.', a: 'Gold standard (currencies fixed to gold; stable but limited monetary flexibility) → Bretton Woods 1944 (fixed-but-adjustable dollar pegs; $35/oz) which broke down in the early 1970s → the modern system with floating, fixed and managed rates.' },
+      { q: 'Explain fixed, floating and managed-float exchange-rate systems.', a: 'Fixed: pegged to a currency or standard. Floating: set by market demand and supply. Managed float: market-driven but with central-bank intervention.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 5 */
+LESSONS.push({
+  id: 'ifis', icon: '5', title: 'International Financial Institutions',
+  sub: 'The IMF, World Bank Group, BIS, ADB and NDB: who they are and what each one is for.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p><span class="term">International Financial Institutions (IFIs)</span> are organisations established by multiple countries to promote economic development, financial stability and international monetary cooperation. Their members are governments, and their funding comes from member contributions and borrowing in capital markets.</p>` },
+    { h: 'The five institutions', html: `
+      <h3>1. International Monetary Fund (IMF)</h3>
+      <ul><li>Promotes international monetary cooperation and financial stability.</li><li>Monitors economies and exchange-rate developments (surveillance).</li><li>Provides financial assistance to countries facing balance-of-payments problems, usually with policy conditions.</li><li>Offers technical assistance and training.</li></ul>
+      <h3>2. World Bank Group</h3>
+      <ul><li>Supports poverty reduction and long-term development.</li><li>Finances infrastructure, education, health and development projects.</li><li>Provides technical knowledge and policy support.</li></ul>
+      <h3>3. Bank for International Settlements (BIS)</h3>
+      <ul><li>Promotes cooperation among central banks.</li><li>Supports monetary and financial stability.</li><li>Provides banking services to central banks and contributes to international financial research. It is often called the central banks' bank.</li></ul>
+      <h3>4. Asian Development Bank (ADB)</h3>
+      <ul><li>Promotes economic and social development in Asia and the Pacific.</li><li>Provides loans, grants and technical assistance for development projects.</li></ul>
+      <h3>5. New Development Bank (NDB)</h3>
+      <ul><li>Established by the BRICS countries.</li><li>Finances infrastructure and sustainable-development projects, particularly in emerging economies.</li></ul>` },
+    { h: 'IMF versus World Bank', html: `
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>IMF</th><th>World Bank</th></tr>
+        <tr><td>Main focus</td><td>Monetary and financial stability</td><td>Long-term development</td></tr>
+        <tr><td>Main support</td><td>Balance-of-payments financing</td><td>Development-project financing</td></tr>
+        <tr><td>Typical need</td><td>Foreign-exchange shortage or external payment crisis</td><td>Infrastructure and poverty reduction</td></tr>
+        <tr><td>Time horizon</td><td>Often short to medium term</td><td>Often medium to long term</td></tr>
+      </table></div>
+      <div class="callout good">Memory trick: <b>IMF = monetary stability; World Bank = development.</b></div>` }
+  ],
+  examples: [
+    { t: 'A country runs short of foreign exchange', s: 'A country\'s reserves can cover only 1.5 months of imports and it cannot pay for essential oil imports.',
+      steps: ['The problem is a balance-of-payments shortage of foreign exchange, so the IMF is the relevant institution.', 'The IMF may lend against a programme of policy reforms (conditionality).', 'Confidence and reserves are expected to recover so the country can pay for imports.'],
+      r: 'IMF = short- to medium-term BoP support.' },
+    { t: 'Financing a rural road and solar project', s: 'A developing country needs funds for rural roads, schools and solar plants repaid over 20 years.',
+      steps: ['The need is long-term development finance.', 'The World Bank Group (or a regional bank such as the ADB for Asia) fits.', 'Funding comes with technical advice and project monitoring.'],
+      r: 'World Bank / ADB = long-term development projects.' },
+    { t: 'Match the institution', s: 'Choose the best institution for each need.',
+      steps: ['Central banks need a forum and banking services: BIS.', 'BRICS emerging economies need infrastructure funds: NDB.', 'Asia-Pacific development loans and grants: ADB.'],
+      r: 'BIS = central banks; NDB = BRICS infrastructure; ADB = Asia-Pacific.' }
+  ],
+  scenes: [
+    { title: 'Five institutions, five jobs', cap: 'Each institution has a distinct role: stability, development, central-bank cooperation, regional development and emerging-market infrastructure.',
+      items: [...G(['IMF|monetary and|financial stability', 'World Bank Group|long-term|development', 'BIS|central-bank|cooperation'], 3, 35, 50, 190, 90, 20, 20, ['a', 'b', 'c'], 13.5),
+        ...G(['ADB|Asia and Pacific|development', 'NDB|BRICS infrastructure|and sustainability'], 2, 130, 190, 190, 90, 20, 20, ['d', 'a'], 13.5)] },
+    { title: 'IMF: a country in trouble', cap: 'When a country runs out of foreign exchange, the IMF can lend short to medium term in return for agreed policy reforms.',
+      items: [['box', 40, 120, 190, 80, 'Country with|FX shortage', 'd', 16], ['box', 470, 120, 190, 80, 'IMF|surveillance|+ lending', 'a', 16],
+        ['arr', 230, 150, 470, 150, 'request support', 'n'], ['arr', 470, 175, 230, 175, 'loan + conditions', 'a'], ['coin', 470, 195, 230, 195, '$', 'a'],
+        ['t', 350, 280, 'Aim: restore reserves, pay for imports, stabilise the economy', 14, 'middle', 'm']] },
+    { title: 'World Bank: building for the long term', cap: 'The World Bank Group finances infrastructure, education, health and poverty-reduction projects over many years.',
+      items: [['box', 255, 40, 190, 70, 'World Bank|Group', 'b', 18], ...G(['Roads and|power', 'Schools and|health', 'Poverty|reduction'], 3, 35, 210, 190, 80, 20, 20, ['b', 'b', 'b'], 15),
+        ['arr', 300, 110, 130, 210, '', 'b'], ['arr', 350, 110, 350, 210, '', 'b'], ['arr', 400, 110, 570, 210, '', 'b'], ['coin', 350, 120, 350, 205, '$', 'b']] }
+  ],
+  quiz: [
+    { q: 'Which institution mainly helps countries facing balance-of-payments problems?', o: ['World Bank', 'IMF', 'ADB', 'NDB'], a: 1, e: 'The IMF provides financial assistance for balance-of-payments difficulties.' },
+    { q: 'The World Bank mainly supports:', o: ['Short-term exchange-rate pegs', 'Long-term development and poverty reduction', 'Central-bank clearing only', 'Tariff collection'], a: 1, e: 'It finances long-term development projects.' },
+    { q: 'The Bank for International Settlements is best known as:', o: ['A bank for central banks', 'A bank for retail customers', 'A development bank for Africa', 'A tax authority'], a: 0, e: 'The BIS promotes cooperation among central banks and provides banking services to them.' },
+    { q: 'The New Development Bank was established by:', o: ['The G7', 'The BRICS countries', 'ASEAN only', 'The European Union'], a: 1, e: 'The NDB was established by the BRICS countries.' },
+    { q: 'A country with a sudden external payment crisis should first approach:', o: ['The IMF', 'The ADB for a 20-year road', 'The World Trade tariff board', 'A stock exchange'], a: 0, e: 'External payment crises are the IMF\'s area; development projects fit the World Bank and regional banks.' }
+  ],
+  revise: {
+    points: ['IFIs are organisations established by multiple countries for development, stability and monetary cooperation.', 'IMF: stability, surveillance, BoP lending, technical help.', 'World Bank Group: poverty reduction, long-term development finance, knowledge.', 'BIS: central-bank cooperation and banking. ADB: Asia and Pacific. NDB: BRICS infrastructure.'],
+    tip: 'For "IMF vs World Bank" give a four-row table: focus, support, typical need, time horizon.',
+    memory: 'IMF = monetary stability; World Bank = development; BIS = banks\' bank; ADB = Asia; NDB = BRICS.',
+    qs: [{ q: 'Distinguish between the IMF and the World Bank.', a: 'IMF: monetary and financial stability, BoP financing, short to medium term for FX shortages. World Bank: long-term development, project financing for infrastructure and poverty reduction, medium to long term.' },
+      { q: 'Write a short note on BIS, ADB and NDB.', a: 'BIS supports central-bank cooperation and offers them banking services; ADB funds development in Asia and the Pacific; NDB, set up by BRICS, finances infrastructure and sustainable development in emerging economies.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 6 */
+LESSONS.push({
+  id: 'bop', icon: '6', title: 'Balance of Payments',
+  sub: 'The country\'s scorecard of every economic transaction with the rest of the world.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p>The <span class="term">Balance of Payments (BoP)</span> is a systematic record of all economic transactions between the residents of a country and the rest of the world during a specific period, usually a year or a quarter. It covers goods, services, income, transfers, investments and financial assets.</p>` },
+    { h: 'Structure', html: `
+      <div class="tw"><table>
+        <tr><th>Account</th><th>What it records</th></tr>
+        <tr><td><b>Current account</b></td><td>Goods, services, primary income, secondary income</td></tr>
+        <tr><td><b>Capital and financial accounts</b></td><td>Capital transfers, investments, loans and other financial flows</td></tr>
+        <tr><td>Errors and omissions; reserve assets</td><td>Statistical balancing item and changes in official reserves, within the accounting framework</td></tr>
+      </table></div>
+      <h3>Double-entry logic</h3>
+      <p>Every transaction is recorded twice. Receipts from the rest of the world (exports, inflows) are <b>credits</b>; payments (imports, outflows) are <b>debits</b>. Because each transaction has two sides, the complete BoP always balances.</p>` },
+    { h: 'Importance', html: `
+      <ol>
+        <li>Shows a country's economic relationships with the rest of the world.</li>
+        <li>Helps assess foreign-exchange inflows and outflows.</li>
+        <li>Indicates the position of exports and imports.</li>
+        <li>Helps governments formulate trade, exchange-rate and monetary policies.</li>
+        <li>Helps identify external financing needs.</li>
+      </ol>` },
+    { h: 'Surplus and deficit: read carefully', html: `
+      <ul>
+        <li><b>Surplus:</b> shorthand meaning receipts exceed payments for a particular account or BoP measure.</li>
+        <li><b>Deficit:</b> shorthand meaning payments exceed receipts for a particular account or measure.</li>
+      </ul>
+      <div class="callout bad">Strictly, the complete BoP balances through double-entry accounting. A current-account deficit is matched by net financial inflows, a fall in reserve assets, or other balancing entries. A trade deficit therefore does <b>not</b> automatically mean the whole BoP is in deficit.</div>` }
+  ],
+  examples: [
+    { t: 'Recording one export in double entry', s: 'An Indian exporter sells goods worth $100 and receives the money in a foreign bank account.',
+      steps: ['Credit: goods exports +$100 (current account).', 'Debit: increase in foreign deposit held by India −$100 (financial account).', 'Net effect on the BoP = 0.'],
+      r: 'Each transaction has a matching entry, so the BoP balances.' },
+    { t: 'A mini BoP (US$ billion, illustrative)', s: 'Goods exports 400, goods imports 600, net services +120, net primary income −30, net secondary income +80, capital account +5.',
+      steps: ['Trade balance = 400 − 600 = −200.', 'Current account = −200 + 120 − 30 + 80 = −30 (deficit).', 'Current + capital = −30 + 5 = −25, so 25 of financing is needed.'],
+      r: 'Financing: 21 net financial inflows (FDI, portfolio, loans) + 4 reserve drawdown = 25. The total balances.' },
+    { t: 'Trade deficit is not BoP deficit', s: 'India imports more goods than it exports, yet software exports and remittances are large.',
+      steps: ['Merchandise balance is negative.', 'Services and secondary income are positive and offset part of it.', 'The remaining gap is covered by financial inflows or reserve changes.'],
+      r: 'Always specify which account or measure a "deficit" refers to.' }
+  ],
+  scenes: [
+    { title: 'Every transaction is recorded twice', cap: 'An exporter ships goods worth $100 and gets paid into a foreign bank account: a credit in the current account and a matching debit in the financial account.',
+      items: [['box', 30, 40, 230, 60, 'Goods exports|credit +$100', 'b', 15], ['box', 440, 40, 230, 60, 'Foreign deposit up|debit −$100', 'd', 15],
+        ['arr', 260, 70, 440, 70, 'two sides of one deal', 'n'], ['box', 255, 170, 190, 70, 'BoP net|= 0', 'a', 20],
+        ['arr', 145, 100, 280, 170, '', 'b'], ['arr', 555, 100, 420, 170, '', 'd'], ['coin', 145, 105, 280, 170, '$', 'b']] },
+    { title: 'Structure of the BoP', cap: 'The BoP splits into the current account and the capital and financial accounts, with errors, omissions and reserve changes inside the accounting framework.',
+      items: [['box', 255, 25, 190, 60, 'Balance of|Payments', 'a', 17],
+        ['box', 30, 140, 280, 70, 'Current account|goods · services · incomes', 'b', 14], ['box', 390, 140, 280, 70, 'Capital and financial|transfers · investment · loans', 'c', 14],
+        ['arr', 300, 85, 180, 140, '', 'n'], ['arr', 400, 85, 520, 140, '', 'n'],
+        ['box', 200, 255, 300, 50, 'Errors, omissions and reserve assets', 'n', 14.5], ['arr', 520, 210, 440, 255, '', 'n']] },
+    { title: 'A current-account deficit must be financed', cap: 'A deficit of 30 plus a capital-account surplus of 5 leaves 25 to finance: 21 from net financial inflows and 4 from reserves.',
+      items: [['bar', 90, 290, 90, 150, 'Current|account', 'd', '−30'], ['bar', 200, 290, 90, 25, 'Capital|account', 'b', '+5'],
+        ['t', 330, 175, '→', 40, 'middle', 'n'],
+        ['bar', 400, 290, 90, 105, 'Financial|inflows', 'a', '+21'], ['bar', 510, 290, 90, 20, 'Reserve|drawdown', 'c', '+4'],
+        ['t', 350, 36, 'US$ billion (illustrative, signs show effect on external balance)', 13.5, 'middle', 'm']] }
+  ],
+  quiz: [
+    { q: 'The Balance of Payments records:', o: ['Only merchandise trade', 'All economic transactions between residents and the rest of the world over a period', 'Only government borrowing', 'Only foreign reserves'], a: 1, e: 'It is a systematic record of all such transactions in a specific period.' },
+    { q: 'The two broad parts of the BoP are:', o: ['Fiscal and monetary', 'Current account and capital and financial accounts', 'Debt and equity', 'Trade and tariff'], a: 1, e: 'Current account, plus capital and financial accounts.' },
+    { q: 'A merchandise trade deficit means:', o: ['The entire BoP is automatically in deficit', 'Imports of goods exceed exports of goods; the overall BoP is not automatically in deficit', 'Reserves must have fallen', 'Services are negative'], a: 1, e: 'Other accounts and financing entries can offset it; the full BoP balances through double entry.' },
+    { q: 'Current account −30 and capital account +5. How much financing is required?', o: ['35', '25', '5', '30'], a: 1, e: '−30 + 5 = −25, so 25 must be financed.' },
+    { q: 'In double-entry BoP accounting, receipts from the rest of the world are recorded as:', o: ['Debits', 'Credits', 'Errors', 'Reserves only'], a: 1, e: 'Receipts (e.g. exports) are credits; payments are debits.' }
+  ],
+  revise: {
+    points: ['BoP = systematic record of residents\' transactions with the rest of the world in a period.', 'Components: current account; capital and financial accounts; errors, omissions and reserves.', 'Double entry: credits = receipts, debits = payments; complete BoP balances.', 'A trade deficit does not mean the whole BoP is in deficit.'],
+    tip: 'Add a mini numeric BoP table to your answer; it shows you understand deficit financing.',
+    memory: 'Credit = Coming in. Debit = Departing.',
+    qs: [{ q: 'What is the BoP? Explain its importance.', a: 'A systematic record of all economic transactions between residents and the rest of the world in a period. Importance: shows external relationships, forex flows, export-import position, informs policy and shows external financing needs.' },
+      { q: 'Does a trade deficit mean a BoP deficit?', a: 'No. The complete BoP balances through double entry; a current-account deficit is matched by net financial inflows, reserve changes or other entries.' }]
+  }
+});
+/* ------------------------------------------------------------------ 7 */
+LESSONS.push({
+  id: 'ca', icon: '7', title: 'Current Account',
+  sub: 'Goods, services, income and transfers: the everyday flow of money between a country and the world.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p>The <span class="term">Current Account</span> records international transactions involving goods, services, primary income and secondary income.</p>` },
+    { h: 'Main components', html: `
+      <ol>
+        <li><b>Trade in goods.</b> Exports and imports of physical products. Example: India exports medicines and imports crude oil.</li>
+        <li><b>Trade in services.</b> Payments for services supplied across borders: IT services, tourism, transport, insurance, consultancy.</li>
+        <li><b>Primary income.</b> Income earned from providing labour or capital across borders: interest, dividends and compensation of employees.</li>
+        <li><b>Secondary income.</b> Transfers for which no direct economic value is received in return: personal remittances and certain international aid.</li>
+      </ol>
+      <div class="tw"><table>
+        <tr><th>Component</th><th>Inflow example (credit)</th><th>Outflow example (debit)</th></tr>
+        <tr><td>Goods</td><td>Export of medicines</td><td>Import of crude oil</td></tr>
+        <tr><td>Services</td><td>Software exports, tourist spending in India</td><td>Indians paying for foreign shipping</td></tr>
+        <tr><td>Primary income</td><td>Dividends from an Indian firm's foreign subsidiary</td><td>Interest paid on foreign loans</td></tr>
+        <tr><td>Secondary income</td><td>Remittances from workers abroad</td><td>Money sent abroad as gifts or aid</td></tr>
+      </table></div>` },
+    { h: 'Balance and importance', html: `
+      <p>A <b>current-account surplus</b> occurs when receipts exceed payments; a <b>deficit</b> occurs when payments exceed receipts.</p>
+      <ul>
+        <li>Measures a country's external trade and income position.</li>
+        <li>Shows whether the country is a net lender or net borrower through current transactions.</li>
+        <li>Helps policymakers evaluate export competitiveness.</li>
+        <li>Helps identify reliance on foreign financing.</li>
+      </ul>
+      <div class="callout">A large software-export and remittance inflow can offset payments for imported oil and machinery, keeping the overall current-account deficit manageable.</div>` },
+    { h: 'Why deficits arise and how they are corrected', html: `
+      <p>Typical causes of a deficit include strong import demand, weak export competitiveness, high commodity prices and high payments on foreign debt. Policy responses include promoting exports, managing demand, adjusting the exchange rate, and encouraging stable financing inflows. A persistent deficit financed by short-term borrowing is riskier than one financed by long-term investment.</p>` }
+  ],
+  examples: [
+    { t: 'Compute the current account (US$ billion)', s: 'Goods exports 400, goods imports 600, net services +120, net primary income −30, net secondary income +80.',
+      steps: ['Trade in goods = 400 − 600 = −200.', 'Add services: −200 + 120 = −80.', 'Add primary income: −80 − 30 = −110.', 'Add secondary income: −110 + 80 = −30.'],
+      r: 'Current-account balance = −30: a deficit.' },
+    { t: 'Deficit as a share of GDP', s: 'The deficit of $30 billion occurs in an economy with GDP of $1,500 billion.',
+      steps: ['Ratio = 30 ÷ 1,500 = 0.02.', 'Convert to a percentage = 2%.'],
+      r: 'The deficit is 2% of GDP; many analysts regard a small percentage as manageable, depending on financing.' },
+    { t: 'Remittances offset oil imports', s: 'A country imports $50 billion of oil and receives $40 billion in remittances.',
+      steps: ['Oil is a goods import (debit).', 'Remittances are secondary income (credit).', 'Net effect = −50 + 40 = −10 before other items.'],
+      r: 'Remittances cover most of the oil bill, improving the current account.' }
+  ],
+  scenes: [
+    { title: 'Four streams of the current account', cap: 'Goods, services, primary income and secondary income each flow in and out of the country.',
+      items: [['box', 255, 115, 190, 80, 'Country|current account', 'a', 17],
+        ['box', 30, 25, 200, 62, 'Goods|exports · imports', 'b', 15], ['box', 470, 25, 200, 62, 'Services|IT · tourism', 'b', 15], ['box', 30, 250, 200, 62, 'Primary income|interest · dividends', 'c', 15], ['box', 470, 250, 200, 62, 'Secondary income|remittances · aid', 'c', 15],
+        ['arr', 230, 70, 270, 118, '', 'n'], ['arr', 470, 70, 430, 118, '', 'n'], ['arr', 230, 265, 270, 192, '', 'n'], ['arr', 470, 265, 430, 192, '', 'n'],
+        ['coin', 120, 100, 265, 140, '$', 'b'], ['coin', 580, 100, 435, 140, '$', 'b']] },
+    { title: 'Adding it up', cap: 'Goods −200, services +120, primary income −30 and secondary income +80 give a current-account deficit of 30.',
+      items: [['t', 350, 34, 'US$ billion', 14, 'middle', 'm'],
+        ['bar', 60, 290, 90, 200, 'Goods|−200', 'd', '−200'], ['bar', 170, 290, 90, 120, 'Services|+120', 'b', '+120'], ['bar', 280, 290, 90, 30, 'Primary|−30', 'd', '−30'], ['bar', 390, 290, 90, 80, 'Secondary|+80', 'b', '+80'],
+        ['box', 520, 120, 150, 90, 'Current|account|−30', 'd', 18]] },
+    { title: 'Net lender or net borrower?', cap: 'A current-account surplus means the country is a net lender to the world; a deficit means it is a net borrower that depends on foreign financing.',
+      items: [['box', 40, 100, 200, 90, 'Surplus|receipts > payments', 'b', 16], ['box', 460, 100, 200, 90, 'Deficit|payments > receipts', 'd', 16],
+        ['box', 270, 230, 160, 54, 'Rest of world', 'n', 16],
+        ['arr', 150, 190, 290, 230, '', 'b'], ['arr', 440, 230, 550, 190, '', 'd'], ['t', 140, 262, 'net lender', 14, 'middle', 'b'], ['t', 560, 262, 'net borrower', 14, 'middle', 'd'], ['coin', 150, 195, 290, 235, '$', 'b'], ['coin', 430, 235, 550, 195, '$', 'd']] }
+  ],
+  quiz: [
+    { q: 'Which of the following is NOT recorded in the current account?', o: ['Export of software', 'Remittances from workers abroad', 'Interest paid on a foreign loan', 'Foreign direct investment into a new plant'], a: 3, e: 'FDI is a financial-account item.' },
+    { q: 'Personal remittances are classified as:', o: ['Trade in goods', 'Primary income', 'Secondary income', 'Portfolio investment'], a: 2, e: 'Transfers with no direct economic value in return are secondary income.' },
+    { q: 'Interest, dividends and compensation of employees are:', o: ['Primary income', 'Secondary income', 'Trade in services', 'Capital transfers'], a: 0, e: 'Income earned from labour or capital across borders is primary income.' },
+    { q: 'Goods −200, services +120, primary −30, secondary +80. The current-account balance is:', o: ['+30', '−30', '−110', '+110'], a: 1, e: '−200 + 120 − 30 + 80 = −30.' },
+    { q: 'A $30bn deficit with GDP of $1,500bn is:', o: ['0.2% of GDP', '2% of GDP', '20% of GDP', '5% of GDP'], a: 1, e: '30 ÷ 1,500 = 2%.' }
+  ],
+  revise: {
+    points: ['Current account = goods + services + primary income + secondary income.', 'Surplus: receipts > payments; deficit: payments > receipts.', 'Shows net lender/borrower position, competitiveness and reliance on foreign financing.', 'Remittances = secondary income; interest and dividends = primary income.'],
+    tip: 'Always give one example per component (medicines/oil, IT/tourism, dividends, remittances).',
+    memory: 'G-S-P-S: Goods, Services, Primary, Secondary.',
+    qs: [{ q: 'Explain the components of the current account.', a: 'Trade in goods, trade in services, primary income (interest, dividends, employee compensation) and secondary income (remittances, aid) with one example each.' },
+      { q: 'Why is the current account important?', a: 'It measures the external trade and income position, shows whether a country is a net lender or borrower, helps evaluate export competitiveness and reveals reliance on foreign financing.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 8 */
+LESSONS.push({
+  id: 'capacc', icon: '8', title: 'Capital Account',
+  sub: 'Capital transfers and asset transactions, and how textbooks and modern standards use the term differently.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p>The <span class="term">Capital Account</span> records capital transfers and transactions involving non-produced, non-financial assets between residents and non-residents.</p>
+      <div class="callout info">In many introductory textbooks, "capital account" is used more broadly for cross-border capital movements, including investments and loans. Under modern IMF statistical standards these investments and loans are classified in the <b>Financial Account</b>.</div>` },
+    { h: 'Main items', html: `
+      <ul>
+        <li><b>Capital transfers</b>, such as certain debt forgiveness and investment grants.</li>
+        <li><b>Transfers of ownership of certain non-produced, non-financial assets</b>, such as some rights and leases.</li>
+        <li><b>In the broader textbook sense:</b> foreign direct investment (FDI), portfolio investment, external loans and banking flows. Technically, these belong to the financial account.</li>
+      </ul>
+      <h3>Financial-account categories</h3>
+      <div class="tw"><table>
+        <tr><th>Category</th><th>Meaning</th><th>Example</th></tr>
+        <tr><td>Direct investment</td><td>Lasting interest and control in a foreign enterprise (commonly 10% or more of voting power)</td><td>Foreign firm builds a plant in India</td></tr>
+        <tr><td>Portfolio investment</td><td>Shares and bonds without control</td><td>Indian company buys foreign shares</td></tr>
+        <tr><td>Other investment</td><td>Loans, deposits, trade credit</td><td>Foreign bank loan to an Indian firm</td></tr>
+        <tr><td>Reserve assets</td><td>Official foreign assets held by the central bank</td><td>Central bank buys US securities</td></tr>
+      </table></div>` },
+    { h: 'Current account versus capital account', html: `
+      <div class="tw"><table>
+        <tr><th>Basis</th><th>Current account</th><th>Capital account</th></tr>
+        <tr><td>Main purpose</td><td>Records current goods, services, income and transfers</td><td>Records capital transfers and non-produced, non-financial assets</td></tr>
+        <tr><td>Common items</td><td>Merchandise, tourism, software exports, remittances</td><td>Certain capital grants and qualifying asset transfers</td></tr>
+        <tr><td>Nature</td><td>Current economic transactions</td><td>Specific capital transactions</td></tr>
+        <tr><td>Related account</td><td>Separate from the financial account</td><td>Separate from the financial account</td></tr>
+      </table></div>
+      <div class="callout"><b>Exam note:</b> if your syllabus uses "capital account" to include FDI, portfolio investment and loans, follow your prescribed textbook's terminology, while remembering that modern BoP standards classify these items under the financial account.</div>` }
+  ],
+  examples: [
+    { t: 'Classify the transaction', s: 'Assign each transaction to current, capital or financial account under modern standards.',
+      steps: ['A foreign company builds a manufacturing plant in India → financial account (direct investment).', 'An Indian company buys foreign shares → financial account (portfolio investment).', 'A qualifying capital grant is transferred between countries → capital account.', 'Indian software exports → current account.'],
+      r: 'Only the capital grant is in the (narrow) capital account.' },
+    { t: 'Is it FDI or portfolio investment?', s: 'A foreign investor buys shares of an Indian company. Case A buys 4% of voting shares; Case B buys 25% and joins the board.',
+      steps: ['Common statistical convention: 10% or more of voting power indicates direct investment.', 'Case A (4%) = portfolio investment.', 'Case B (25%, with influence) = direct investment.'],
+      r: 'Degree of control separates FDI from portfolio flows.' },
+    { t: 'Textbook versus modern terminology', s: 'Your textbook lists "FDI and external loans" under the capital account.',
+      steps: ['Write the answer in the textbook\'s terminology if that is the syllabus.', 'Add a line: "Under IMF BPM6 these appear in the financial account."', 'This shows both exam-safe and technically correct understanding.'],
+      r: 'State the textbook classification, then add the modern note.' }
+  ],
+  scenes: [
+    { title: 'Sorting transactions into accounts', cap: 'Software exports go to the current account, a capital grant to the capital account, and a foreign plant or purchase of shares to the financial account.',
+      items: [['box', 40, 25, 180, 56, 'Software exports', 'n', 14.5], ['box', 260, 25, 180, 56, 'Capital grant', 'n', 14.5], ['box', 480, 25, 180, 56, 'Foreign plant|or shares', 'n', 14.5],
+        ['box', 40, 235, 180, 62, 'Current|account', 'b', 16], ['box', 260, 235, 180, 62, 'Capital|account', 'c', 16], ['box', 480, 235, 180, 62, 'Financial|account', 'a', 16],
+        ['arr', 130, 81, 130, 235, '', 'b'], ['arr', 350, 81, 350, 235, '', 'c'], ['arr', 570, 81, 570, 235, '', 'a'],
+        ['coin', 130, 90, 130, 230, '$', 'b'], ['coin', 350, 90, 350, 230, '$', 'c'], ['coin', 570, 90, 570, 230, '$', 'a']] },
+    { title: 'Two meanings of "capital account"', cap: 'Textbooks often use the term broadly to include investments and loans, while modern IMF standards place those in the financial account.',
+      items: [['band', 25, 35, 315, 260, 'c'], ['band', 360, 35, 315, 260, 'a'],
+        ['t', 182, 68, 'Many textbooks', 17, 'middle', 'c'], ['t', 517, 68, 'Modern IMF standards', 17, 'middle', 'a'],
+        ['box', 50, 100, 265, 56, 'Capital account:|FDI, portfolio, loans, transfers', 'c', 14], ['box', 385, 100, 265, 50, 'Capital account:|transfers, non-produced assets', 'c', 14], ['box', 385, 180, 265, 56, 'Financial account:|FDI, portfolio, loans, reserves', 'a', 14],
+        ['t', 182, 200, 'Follow your prescribed textbook', 14, 'middle', 'm'], ['t', 182, 222, 'and add the modern note', 14, 'middle', 'm']] },
+    { title: 'FDI or portfolio?', cap: 'A small stake without control is portfolio investment; a stake of about 10% or more with influence is direct investment.',
+      items: [['t', 350, 36, 'Share of voting power held by the foreign investor', 14, 'middle', 'm'],
+        ['bar', 130, 290, 110, 16, 'Case A: 4%', 'c', ''], ['bar', 290, 290, 110, 100, 'Case B: 25%', 'a', '25%'],
+        ['line', 80, 250, 480, 250, 'n', 1], ['t', 185, 232, '4%', 15, 'middle', 'c'], ['t', 412, 238, '10% threshold', 12.5, 'start', 'm'],
+        ['box', 510, 100, 150, 56, 'Portfolio', 'c', 15], ['box', 510, 190, 150, 56, 'Direct (FDI)', 'a', 15]] }
+  ],
+  quiz: [
+    { q: 'Under modern IMF statistical standards, FDI is recorded in the:', o: ['Current account', 'Capital account', 'Financial account', 'Secondary income'], a: 2, e: 'Investments and loans are in the financial account in modern standards.' },
+    { q: 'A qualifying investment grant or debt forgiveness is a:', o: ['Capital-account item', 'Current-account item', 'Portfolio investment', 'Reserve asset'], a: 0, e: 'Capital transfers belong in the capital account.' },
+    { q: 'An Indian company buys shares in a foreign company without control. This is:', o: ['Direct investment', 'Portfolio investment (financial account)', 'Remittance', 'Export of services'], a: 1, e: 'Purchase of shares without control is portfolio investment recorded in the financial account.' },
+    { q: 'Why do many textbooks include FDI and loans in the capital account?', o: ['They use the term broadly for cross-border capital movements', 'IMF standards require it', 'These are trade in goods', 'They are secondary income'], a: 0, e: 'This is the broader, older textbook usage; modern standards use the financial account.' },
+    { q: 'A common convention treats direct investment as at least this share of voting power:', o: ['1%', '5%', '10%', '51% only'], a: 2, e: 'A 10% or higher voting-power stake typically indicates direct investment.' }
+  ],
+  revise: {
+    points: ['Capital account (strict): capital transfers and non-produced, non-financial assets.', 'Financial account (modern): FDI, portfolio investment, other investment, reserve assets.', 'Textbook "capital account" often includes FDI, portfolio, loans, banking flows.', 'Current account is separate from both capital and financial accounts.'],
+    tip: 'Give the textbook version first, then add: "Under modern IMF standards these are in the financial account."',
+    memory: 'Capital account = Transfers. Financial account = Funds (investments, loans).',
+    qs: [{ q: 'Distinguish between the current account and the capital account.', a: 'Current account: goods, services, income and transfers (current economic transactions). Capital account: capital transfers and non-produced non-financial assets. Add the note that FDI, portfolio investment and loans are in the financial account in modern standards.' },
+      { q: 'Explain the components of the capital account.', a: 'Capital transfers (debt forgiveness, investment grants), transfers of some non-produced non-financial assets (rights, leases); broadly in textbooks also FDI, portfolio investment, loans and banking flows.' }]
+  }
+});
+
+/* ------------------------------------------------------------------ 9 */
+LESSONS.push({
+  id: 'barriers', icon: '9', title: 'Barriers to Trade',
+  sub: 'Tariffs, quotas, standards, subsidies and licences: why governments restrict trade and what it costs.',
+  learn: [
+    { h: 'Meaning', html: `
+      <p><span class="term">Trade barriers</span> are restrictions or measures imposed by governments that make international trade more expensive, more difficult or less competitive. Governments use them to protect domestic industries, safeguard public health, raise revenue or respond to unfair trade practices.</p>` },
+    { h: 'Types of trade barriers', html: `
+      <ol>
+        <li><b>Tariff barriers.</b> Taxes on imported (sometimes exported) goods. A customs duty on imported cars makes foreign cars costlier at home. Tariffs may be <i>ad valorem</i> (a percentage of value) or <i>specific</i> (a fixed amount per unit).</li>
+        <li><b>Quotas.</b> Limits on the quantity or value of goods imported or exported, for example a fixed volume of a product per year.</li>
+        <li><b>Non-tariff barriers.</b> Rules other than ordinary tariffs: product standards, safety regulations, labelling requirements, complicated customs procedures.</li>
+        <li><b>Subsidies.</b> Government financial support to domestic producers that gives them an advantage over foreign suppliers.</li>
+        <li><b>Import licensing and embargoes.</b> Licensing needs official permission to import certain goods. An embargo is a prohibition or severe restriction on trade with a country or in particular goods.</li>
+      </ol>` },
+    { h: 'Reasons for imposing barriers', html: `
+      <ol>
+        <li>Protect domestic industries from foreign competition.</li>
+        <li>Protect employment in selected industries.</li>
+        <li>Protect <b>infant industries</b> while they develop.</li>
+        <li>Safeguard public health, safety and the environment.</li>
+        <li>Prevent dumping or respond to certain unfair trade practices.</li>
+        <li>Reduce dependence on foreign suppliers in strategic sectors.</li>
+        <li>Raise government revenue through customs duties.</li>
+      </ol>` },
+    { h: 'Advantages and disadvantages', html: `
+      <div class="tw"><table>
+        <tr><th>Advantages</th><th>Disadvantages</th></tr>
+        <tr><td>May help young domestic industries grow</td><td>Increase prices for consumers</td></tr>
+        <tr><td>May protect certain jobs in the short term</td><td>Reduce competition and choice</td></tr>
+        <tr><td>May improve national security for strategic goods</td><td>Raise costs for businesses using imported inputs</td></tr>
+        <tr><td>May address specific unfair trade practices when applied lawfully</td><td>May lead to retaliation; can reduce trade and efficiency</td></tr>
+      </table></div>
+      <div class="callout good"><b>Conclusion:</b> trade barriers can protect selected domestic interests, but excessive or poorly designed barriers can increase costs and reduce the benefits of international trade.</div>` }
+  ],
+  examples: [
+    { t: 'Effect of an import duty', s: 'An imported car has an import value of ₹10,00,000. An ad valorem duty of 40% is imposed. A similar domestic car sells for ₹13,00,000.',
+      steps: ['Duty = 40% × 10,00,000 = ₹4,00,000.', 'Landed price = 10,00,000 + 4,00,000 = ₹14,00,000.', 'Compare: domestic car ₹13,00,000 now costs less than the imported car.'],
+      r: 'The tariff raised the import price by 40% and shifted demand to the domestic producer.' },
+    { t: 'A quota creates scarcity', s: 'Domestic demand for a product is 15,000 units a year but the import quota is 10,000 units and local output is 3,000 units.',
+      steps: ['Total supply = 10,000 + 3,000 = 13,000 units.', 'Shortfall = 15,000 − 13,000 = 2,000 units.', 'Prices rise until demand falls to 13,000.'],
+      r: 'Quotas can raise consumer prices; licence holders or importers may capture the extra margin.' },
+    { t: 'Subsidy and price advantage', s: 'A domestic producer\'s cost is ₹100 per unit; the government provides a subsidy of ₹15 per unit.',
+      steps: ['Effective cost = 100 − 15 = ₹85.', 'Producer can sell at ₹90 and still earn ₹5 per unit.', 'A foreign rival with cost ₹95 and no subsidy cannot match ₹90 profitably.'],
+      r: 'Subsidies lower domestic producers\' effective cost and disadvantage foreign suppliers.' }
+  ],
+  scenes: [
+    { title: 'A tariff stacks onto the price', cap: 'A 40% duty adds ₹4,00,000 to a ₹10,00,000 imported car, lifting it above the ₹13,00,000 domestic alternative.',
+      items: [['t', 350, 34, 'Price of a car (₹ lakh)', 15, 'middle', 'm'],
+        ['bar', 80, 290, 120, 100, 'Import|value', 'a', '10'], ['bar', 230, 290, 120, 140, 'Import with|40% duty', 'd', '14'], ['bar', 380, 290, 120, 130, 'Domestic|car', 'b', '13'],
+        ['t', 585, 150, 'Duty|+₹4 lakh', 17, 'middle', 'd'], ['t', 585, 205, 'buyers switch|to the domestic car', 13, 'middle', 'm']] },
+    { title: 'A quota is a gate', cap: 'Only 10,000 units may enter. Demand of 15,000 minus supply of 13,000 leaves a shortage of 2,000 units, which pushes prices up.',
+      items: [['box', 40, 120, 160, 70, 'Foreign|exporters', 'c', 16], ['box', 500, 120, 160, 70, 'Domestic|market', 'b', 16],
+        ['band', 300, 60, 18, 190, 'd'], ['t', 309, 270, 'Quota: 10,000', 13.5, 'middle', 'd'],
+        ['arr', 200, 150, 500, 150, 'only 10,000 pass', 'n'], ['coin', 200, 160, 300, 160, '▣', 'c'], ['coin', 330, 160, 430, 160, '▣', 'c'],
+        ['t', 350, 308, 'Demand 15,000 − supply 13,000 = shortage 2,000', 14, 'middle', 'm']] },
+    { title: 'From protection to retaliation', cap: 'A barrier protects one industry, raises costs for consumers and users of imported inputs, and may trigger retaliation that cuts exports.',
+      items: [['box', 30, 60, 190, 70, 'Barrier|imposed', 'a', 15], ['box', 255, 60, 190, 70, 'Domestic industry|protected', 'b', 15], ['box', 480, 60, 190, 70, 'Consumer and input|prices rise', 'c', 15],
+        ['box', 370, 200, 190, 70, 'Other country|retaliates', 'd', 15], ['box', 140, 200, 190, 70, 'Trade and|efficiency fall', 'd', 15],
+        ['arr', 220, 95, 255, 95, '', 'n'], ['arr', 445, 95, 480, 95, '', 'n'], ['arr', 575, 130, 500, 200, '', 'n'], ['arr', 370, 235, 330, 235, '', 'n']] }
+  ],
+  quiz: [
+    { q: 'A tax on imported goods is called a:', o: ['Subsidy', 'Quota', 'Tariff', 'Embargo'], a: 2, e: 'Tariffs are taxes on imported (sometimes exported) goods.' },
+    { q: 'A limit on the quantity of goods that can be imported is a:', o: ['Quota', 'Tariff', 'Subsidy', 'Dividend'], a: 0, e: 'Quotas restrict quantity or value.' },
+    { q: 'A ₹10,00,000 import faces a 40% duty. The landed price is:', o: ['₹10,40,000', '₹14,00,000', '₹4,00,000', '₹12,00,000'], a: 1, e: '10,00,000 + 40% × 10,00,000 = ₹14,00,000.' },
+    { q: 'Which is a non-tariff barrier?', o: ['Customs duty of 20%', 'Complex product-safety and labelling requirements', 'A fixed per-unit tariff', 'A reduction in income tax'], a: 1, e: 'Standards, safety rules, labelling and customs procedures are non-tariff barriers.' },
+    { q: 'Protecting a young domestic industry until it can compete is known as the:', o: ['Dumping argument', 'Infant-industry argument', 'Embargo argument', 'Retaliation argument'], a: 1, e: 'Infant industries are shielded while they develop.' }
+  ],
+  revise: {
+    points: ['Barriers = government restrictions making trade costlier, harder or less competitive.', 'Types: tariffs, quotas, non-tariff barriers, subsidies, import licensing and embargoes.', 'Reasons: protect industry, jobs, infant industries, public health, anti-dumping, strategic sectors, revenue.', 'Pros: nurture infant industry, jobs, security. Cons: higher prices, less choice, costlier inputs, retaliation, inefficiency.'],
+    tip: 'Finish with the balanced conclusion: barriers protect selected interests but excessive ones raise costs and shrink the gains from trade.',
+    memory: 'T-Q-N-S-L: Tariff, Quota, Non-tariff, Subsidy, Licence/embargo.',
+    qs: [{ q: 'Explain the types of trade barriers.', a: 'Tariffs, quotas, non-tariff barriers (standards, labelling, customs procedures), subsidies and import licensing or embargoes, each with an example.' },
+      { q: 'Discuss the advantages and disadvantages of trade barriers.', a: 'Advantages: help infant industries, protect some jobs, improve security, address unfair practices. Disadvantages: higher consumer prices, less competition and choice, higher input costs, retaliation and reduced efficiency.' }]
+  }
+});
+/* =====================================================================
+   ENGINE: state, rendering, scene player, quiz
+   ===================================================================== */
+const KEY = 'ifm-unit1-studio-v1';
+const TABS = [['learn', 'Learn'], ['watch', 'Watch'], ['examples', 'Examples'], ['quiz', 'Quiz'], ['revise', 'Revise']];
+const SCENE_MS = 7500;
+const MOCK = { id: 'mock', icon: '★', title: 'Unit I mock test', sub: 'Twelve mixed questions drawn from all nine topics. A fresh set every attempt.', mock: true };
+
+let state = loadState();
+const quizRun = {};            // in-memory quiz progress per lesson id
+let player = { i: 0, playing: true, timer: null };
+
+function loadState() {
+  try {
+    const s = JSON.parse(localStorage.getItem(KEY));
+    if (s && typeof s === 'object' && s.done) return { cur: s.cur || 0, tab: s.tab || 'learn', done: s.done, best: s.best || {} };
+  } catch (e) { /* storage unavailable or empty */ }
+  return { cur: 0, tab: 'learn', done: {}, best: {} };
+}
+function saveState() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) { /* ignore */ } }
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+function allItems() { return LESSONS.concat([MOCK]); }
+function curLesson() { return allItems()[state.cur] || LESSONS[0]; }
+function isDone(id, tab) { return !!(state.done[id] && state.done[id][tab]); }
+function setDone(id, tab, v) { state.done[id] = state.done[id] || {}; state.done[id][tab] = v !== false; saveState(); }
+function lessonCount(id) { return TABS.filter((t) => isDone(id, t[0])).length; }
+
+/* ---------- chrome: rail, header, tabs ---------- */
+function renderRail() {
+  const items = allItems();
+  $('route').innerHTML = items.map((L, i) => {
+    let cls = 'stop', sub = '';
+    if (L.mock) {
+      const b = state.best.mock;
+      sub = b == null ? 'Test yourself' : 'Best score ' + b + '/12';
+      if (b != null && b >= 8) cls += ' full';
+    } else {
+      const n = lessonCount(L.id);
+      sub = n + ' of 5 sections';
+      if (n === 5) cls += ' full'; else if (n > 0) cls += ' part';
+    }
+    if (i === state.cur) cls += ' cur';
+    return '<li><button class="' + cls + '" data-act="go" data-i="' + i + '"' + (i === state.cur ? ' aria-current="step"' : '') + '><span class="dot">' +
+      (cls.indexOf('full') > -1 ? '✓' : esc(L.icon)) + '</span><span class="tt">' + esc(L.title) + '<small>' + sub + '</small></span></button></li>';
+  }).join('');
+  const total = LESSONS.length * 5;
+  const got = LESSONS.reduce((a, L) => a + lessonCount(L.id), 0);
+  const pct = Math.round(got / total * 100);
+  $('ovPct').textContent = pct + '%';
+  $('ovLabel').textContent = got + ' of ' + total + ' sections done';
+  $('ovBar').style.width = pct + '%';
+}
+function renderHead() {
+  const L = curLesson();
+  $('lTitle').textContent = L.title;
+  $('lSub').textContent = L.sub;
+  $('mobTitle').textContent = L.mock ? 'Mock test' : 'Topic ' + L.icon + ' of ' + LESSONS.length;
+  document.title = L.title + ' · Unit I International Finance';
+}
+function renderTabs() {
+  const L = curLesson();
+  if (L.mock) { $('tabs').innerHTML = ''; $('tabs').style.display = 'none'; return; }
+  $('tabs').style.display = '';
+  $('tabs').innerHTML = TABS.map((t) => '<button class="tab" role="tab" data-act="tab" data-tab="' + t[0] + '" aria-selected="' + (state.tab === t[0]) +
+    '">' + t[1] + '<span class="tick' + (isDone(L.id, t[0]) ? ' on' : '') + '"></span></button>').join('');
+}
+function renderNav() {
+  const items = allItems();
+  const p = state.cur > 0 ? '<button class="btn alt" data-act="go" data-i="' + (state.cur - 1) + '">Previous: ' + esc(items[state.cur - 1].title) + '</button>' : '<span></span>';
+  const n = state.cur < items.length - 1 ? '<button class="btn" data-act="go" data-i="' + (state.cur + 1) + '">Next: ' + esc(items[state.cur + 1].title) + '</button>' : '<span></span>';
+  $('lnav').innerHTML = p + n;
+}
+function updateChrome() { renderRail(); renderTabs(); }
+
+/* ---------- navigation ---------- */
+function go(i, tab) {
+  stopPlayer();
+  const max = allItems().length - 1;
+  state.cur = Math.max(0, Math.min(max, i));
+  state.tab = tab || 'learn';
+  saveState();
+  closeRail();
+  renderAll();
+  $('main').scrollIntoView({ block: 'start' });
+  try { $('main').focus({ preventScroll: true }); } catch (e) { /* ignore */ }
+}
+function switchTab(t) {
+  stopPlayer();
+  state.tab = t; saveState();
+  renderTabs(); renderPanel(); renderRail();
+}
+function renderAll() { renderRail(); renderHead(); renderTabs(); renderPanel(); renderNav(); }
+function renderPanel() {
+  const L = curLesson(), p = $('panel');
+  if (L.mock) { p.innerHTML = ''; viewQuiz(L, true); return; }
+  if (state.tab === 'learn') viewLearn(L);
+  else if (state.tab === 'watch') viewWatch(L);
+  else if (state.tab === 'examples') viewExamples(L);
+  else if (state.tab === 'quiz') viewQuiz(L, false);
+  else viewRevise(L);
+}
+function nextTabOf(t) { const i = TABS.findIndex((x) => x[0] === t); return TABS[Math.min(i + 1, TABS.length - 1)][0]; }
+function doneButton(L, tab, label) {
+  const on = isDone(L.id, tab);
+  return '<div class="ctaRow"><button class="btn" data-act="markdone" data-tab="' + tab + '">' + (on ? 'Marked as done. Continue' : label) + '</button>' +
+    (on ? '<button class="btn alt" data-act="unmark" data-tab="' + tab + '">Undo</button><span class="badge">Section complete</span>' : '') + '</div>';
+}
+
+/* ---------- Learn / Examples / Revise ---------- */
+function viewLearn(L) {
+  $('panel').innerHTML = L.learn.map((s) => '<h3>' + esc(s.h) + '</h3>' + s.html).join('') + doneButton(L, 'learn', 'Mark as read and watch the lesson');
+}
+function viewExamples(L) {
+  $('panel').innerHTML = L.examples.map((e, i) => '<article class="ex"><h3>Example ' + (i + 1) + ': ' + esc(e.t) + '</h3><p class="sc">' + esc(e.s) +
+    '</p><ol>' + e.steps.map((s) => '<li>' + esc(s) + '</li>').join('') + '</ol><p class="res">' + esc(e.r) + '</p></article>').join('') +
+    doneButton(L, 'examples', 'Mark examples as studied');
+}
+function viewRevise(L) {
+  const r = L.revise;
+  $('panel').innerHTML = '<h3>Key points</h3><ul class="kp">' + r.points.map((p) => '<li>' + esc(p) + '</li>').join('') + '</ul>' +
+    '<div class="rgrid"><div class="rcard"><b>Exam tip</b>' + esc(r.tip) + '</div><div class="rcard"><b>Memory trick</b>' + esc(r.memory) + '</div></div>' +
+    '<h3>Likely exam questions</h3>' + r.qs.map((q) => '<details class="qa"><summary>' + esc(q.q) + '</summary><p>' + esc(q.a) + '</p></details>').join('') +
+    doneButton(L, 'revise', 'Mark revision as done');
+}
+
+/* ---------- scene renderer ---------- */
+const TONE = { a: 'a', b: 'b', c: 'c', d: 'd', n: 'n', m: 'n' };
+function lines(txt, x, y, fs, cls, anchor, lh) {
+  const parts = String(txt).split('|'), lhh = lh || fs * 1.22, y0 = y - (parts.length - 1) * lhh / 2;
+  return '<text class="' + cls + '" x="' + x + '" y="' + y0 + '" font-size="' + fs + '" text-anchor="' + (anchor || 'middle') + '" dominant-baseline="central" font-weight="600">' +
+    parts.map((p, i) => '<tspan x="' + x + '" dy="' + (i ? lhh : 0) + '">' + esc(p) + '</tspan>').join('') + '</text>';
+}
+function renderScene(sc) {
+  let out = '<svg viewBox="0 0 700 340" role="img" aria-label="' + esc(sc.title) + '" xmlns="http://www.w3.org/2000/svg">' +
+    '<defs>' + ['a', 'b', 'c', 'd', 'n'].map((k) => '<marker id="ah' + k + '" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="solid' + k.toUpperCase() + '"/></marker>').join('') + '</defs>';
+  sc.items.forEach((it, i) => {
+    const k = it[0], d = (i * 0.28).toFixed(2) + 's';
+    const st = 'style="animation-delay:' + d + '"';
+    if (k === 'band') {
+      out += '<rect class="it band f' + TONE[it[5]] + '" ' + st + ' x="' + it[1] + '" y="' + it[2] + '" width="' + it[3] + '" height="' + it[4] + '" rx="16" stroke-width="1.5"/>';
+    } else if (k === 'box') {
+      const t = TONE[it[6]], fs = it[7] || 14;
+      out += '<g class="it" ' + st + '><rect class="f' + t + '" x="' + it[1] + '" y="' + it[2] + '" width="' + it[3] + '" height="' + it[4] + '" rx="12" stroke-width="2"/>' +
+        lines(it[5], it[1] + it[3] / 2, it[2] + it[4] / 2, fs, 'tn', 'middle') + '</g>';
+    } else if (k === 't') {
+      out += '<g class="it" ' + st + '>' + lines(it[3], it[1], it[2], it[4] || 14, 't' + (TONE[it[6]] === 'n' ? (it[6] === 'm' ? 'm' : 'n') : TONE[it[6]]), it[5] || 'middle') + '</g>';
+    } else if (k === 'arr') {
+      const t = TONE[it[6]], len = Math.round(Math.hypot(it[3] - it[1], it[4] - it[2]));
+      out += '<g class="it" ' + st + '><line class="s' + (t === 'n' ? 'n' : t) + ' draw" style="--len:' + len + ';animation-delay:' + d + '" x1="' + it[1] + '" y1="' + it[2] + '" x2="' + it[3] + '" y2="' + it[4] +
+        '" stroke-width="2.5" stroke-linecap="round" marker-end="url(#ah' + t + ')"/>';
+      if (it[5]) out += lines(it[5], (it[1] + it[3]) / 2, (it[2] + it[4]) / 2 - 12, 12.5, 'tm', 'middle');
+      out += '</g>';
+    } else if (k === 'line') {
+      out += '<line class="it s' + TONE[it[5]] + '" ' + st + ' x1="' + it[1] + '" y1="' + it[2] + '" x2="' + it[3] + '" y2="' + it[4] + '" stroke-width="2.5"' + (it[6] ? ' stroke-dasharray="7 6"' : '') + '/>';
+    } else if (k === 'coin') {
+      const t = TONE[it[6]];
+      out += '<g class="coin" style="--dx:' + (it[3] - it[1]) + 'px;--dy:' + (it[4] - it[2]) + 'px;animation-delay:' + (0.8 + i * 0.28).toFixed(2) + 's"><circle class="solid' + t.toUpperCase() + '" cx="' + it[1] + '" cy="' + it[2] + '" r="15"/>' +
+        '<text x="' + it[1] + '" y="' + it[2] + '" font-size="15" font-weight="700" text-anchor="middle" dominant-baseline="central" fill="#fff">' + esc(it[5]) + '</text></g>';
+    } else if (k === 'bar') {
+      const t = TONE[it[6]], x = it[1], base = it[2], w = it[3], h = it[4];
+      out += '<g><rect class="bar solid' + t.toUpperCase() + '" style="animation-delay:' + d + '" x="' + x + '" y="' + (base - h) + '" width="' + w + '" height="' + h + '" rx="8"/></g>' +
+        '<g class="it" ' + st + '>' + lines(it[5], x + w / 2, base + 22, 13, 'tn', 'middle') + (it[7] ? lines(it[7], x + w / 2, base - h - 14, 15, 't' + t, 'middle') : '') + '</g>';
+    }
+  });
+  return out + '</svg>';
+}
+
+/* ---------- Watch: video-style player ---------- */
+function viewWatch(L) {
+  const n = L.scenes.length;
+  player = { i: 0, playing: true, timer: null };
+  $('panel').innerHTML = '<div class="stage" id="stage"></div>' +
+    '<div class="capbox"><h3 id="cTitle"></h3><p id="cText"></p></div>' +
+    '<div class="seg" id="seg">' + L.scenes.map((s, i) => '<button data-act="scene" data-i="' + i + '" aria-label="Scene ' + (i + 1) + ': ' + esc(s.title) + '"></button>').join('') + '</div>' +
+    '<div class="ctl"><button class="ghost" data-act="sprev" aria-label="Previous scene">◀ Prev</button><button class="ghost" data-act="splay" id="playBtn">Pause</button>' +
+    '<button class="ghost" data-act="snext" aria-label="Next scene">Next ▶</button><button class="ghost" data-act="sreplay">Replay</button><span class="sceneno" id="sNo"></span></div>' +
+    '<div class="callout info" style="margin-top:18px">Watch all ' + n + ' scenes to complete this section. Tap a bar to jump between scenes.</div>';
+  showScene(L, 0);
+}
+function showScene(L, i) {
+  clearTimeout(player.timer);
+  const n = L.scenes.length;
+  player.i = Math.max(0, Math.min(n - 1, i));
+  const sc = L.scenes[player.i];
+  $('stage').innerHTML = renderScene(sc);
+  $('cTitle').textContent = sc.title;
+  $('cText').textContent = sc.cap;
+  $('sNo').textContent = 'Scene ' + (player.i + 1) + ' of ' + n;
+  const seg = $('seg');
+  seg.classList.toggle('paused', !player.playing);
+  Array.prototype.forEach.call(seg.children, (b, k) => {
+    b.className = k < player.i ? 'done' : (k === player.i ? 'act' : '');
+    if (k === player.i) b.style.setProperty('--dur', SCENE_MS + 'ms');
+  });
+  $('playBtn').textContent = player.playing ? 'Pause' : 'Play';
+  if (player.i === n - 1) { if (!isDone(L.id, 'watch')) { setDone(L.id, 'watch'); updateChrome(); } }
+  if (player.playing && player.i < n - 1) {
+    player.timer = setTimeout(() => showScene(L, player.i + 1), SCENE_MS);
+  } else if (player.i === n - 1) {
+    player.playing = false; $('playBtn').textContent = 'Play'; seg.classList.add('paused');
+    Array.prototype.forEach.call(seg.children, (b, k) => { b.className = 'done'; });
+  }
+}
+function stopPlayer() { clearTimeout(player.timer); player.playing = false; }
+
+/* ---------- Quiz ---------- */
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+function newRun(L, isMock) {
+  let qs;
+  if (isMock) {
+    qs = shuffle(LESSONS.reduce((acc, l) => acc.concat(l.quiz.map((q) => Object.assign({ from: l.title }, q))), [])).slice(0, 12);
+  } else qs = L.quiz.map((q) => q);
+  quizRun[L.id] = { qs: qs, i: 0, score: 0, picked: null, wrong: [], finished: false };
+}
+function viewQuiz(L, isMock) {
+  if (!quizRun[L.id]) newRun(L, isMock);
+  const r = quizRun[L.id], p = $('panel');
+  if (r.finished) {
+    const total = r.qs.length, pass = isMock ? 8 : 3;
+    const msg = r.score === total ? 'Perfect score.' : r.score >= pass ? 'Good work. You have passed this quiz.' : 'Review the Learn and Revise tabs, then try again.';
+    p.innerHTML = '<div class="result"><h3>Quiz complete</h3><div class="score">' + r.score + ' / ' + total + '</div><p>' + msg + ' Best so far: <b>' + (state.best[L.id] == null ? r.score : state.best[L.id]) + ' / ' + total + '</b>.</p>' +
+      (r.wrong.length ? '<h3>Questions to revisit</h3>' + r.wrong.map((w) => '<div class="rev"><b>' + esc(w.q) + '</b><br>Correct answer: ' + esc(w.ans) + '<br>' + esc(w.e) + (w.from ? '<br><i>Topic: ' + esc(w.from) + '</i>' : '') + '</div>').join('') : '') +
+      '<div class="ctaRow"><button class="btn" data-act="retry">' + (isMock ? 'Start a new mock test' : 'Retry quiz') + '</button>' +
+      (!isMock ? '<button class="btn alt" data-act="tab" data-tab="revise">Go to revision notes</button>' : '') + '</div></div>';
+    return;
+  }
+  const q = r.qs[r.i], letters = ['A', 'B', 'C', 'D', 'E'], answered = r.picked !== null;
+  p.innerHTML = '<div class="qcard"><div class="qmeta"><span>Question ' + (r.i + 1) + ' of ' + r.qs.length + '</span><span>Score ' + r.score + '</span></div>' +
+    '<h3>' + esc(q.q) + '</h3><div class="opts" role="group" aria-label="Answer choices">' +
+    q.o.map((o, k) => {
+      let c = 'opt';
+      if (answered) { if (k === q.a) c += ' ok'; else if (k === r.picked) c += ' no'; }
+      return '<button class="' + c + '" data-act="pick" data-k="' + k + '"' + (answered ? ' disabled' : '') + '><span class="l">' + letters[k] + '</span><span>' + esc(o) + '</span></button>';
+    }).join('') + '</div>' +
+    (answered ? '<div class="fb2 ' + (r.picked === q.a ? 'ok' : 'no') + '"><b>' + (r.picked === q.a ? 'Correct.' : 'Not quite.') + '</b> ' + esc(q.e) + '</div>' +
+      '<div class="ctaRow"><button class="btn" data-act="qnext">' + (r.i === r.qs.length - 1 ? 'See result' : 'Next question') + '</button></div>' : '') + '</div>';
+}
+function pickAnswer(k) {
+  const L = curLesson(), r = quizRun[L.id];
+  if (!r || r.picked !== null || r.finished) return;
+  const q = r.qs[r.i];
+  r.picked = k;
+  if (k === q.a) r.score++; else r.wrong.push({ q: q.q, ans: q.o[q.a], e: q.e, from: q.from });
+  viewQuiz(L, !!L.mock);
+}
+function nextQuestion() {
+  const L = curLesson(), r = quizRun[L.id];
+  if (!r || r.picked === null) return;
+  if (r.i < r.qs.length - 1) { r.i++; r.picked = null; }
+  else {
+    r.finished = true;
+    if (state.best[L.id] == null || r.score > state.best[L.id]) state.best[L.id] = r.score;
+    if (!L.mock && r.score >= 3) setDone(L.id, 'quiz');
+    saveState(); updateChrome();
+  }
+  viewQuiz(L, !!L.mock);
+}
+
+/* ---------- side drawer, theme, reset ---------- */
+function openRail() { $('rail').classList.add('open'); $('menuBtn').setAttribute('aria-expanded', 'true'); }
+function closeRail() { $('rail').classList.remove('open'); $('menuBtn').setAttribute('aria-expanded', 'false'); }
+function applyTheme(t) { if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme'); }
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme') || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  applyTheme(next);
+  try { localStorage.setItem(KEY + '-theme', next); } catch (e) { /* ignore */ }
+}
+
+/* ---------- event delegation ---------- */
+document.addEventListener('click', (ev) => {
+  const el = ev.target.closest('[data-act]');
+  if (!el) return;
+  const act = el.getAttribute('data-act'), L = curLesson();
+  if (act === 'go') go(parseInt(el.getAttribute('data-i'), 10));
+  else if (act === 'tab') { const t = el.getAttribute('data-tab'); if (L.mock) return; switchTab(t); }
+  else if (act === 'markdone') { const t = el.getAttribute('data-tab'); setDone(L.id, t); updateChrome(); if (!(t === 'revise')) switchTab(nextTabOf(t)); else { renderPanel(); } }
+  else if (act === 'unmark') { setDone(L.id, el.getAttribute('data-tab'), false); updateChrome(); renderPanel(); }
+  else if (act === 'pick') pickAnswer(parseInt(el.getAttribute('data-k'), 10));
+  else if (act === 'qnext') nextQuestion();
+  else if (act === 'retry') { newRun(L, !!L.mock); viewQuiz(L, !!L.mock); }
+  else if (act === 'scene') { player.playing = false; showScene(L, parseInt(el.getAttribute('data-i'), 10)); }
+  else if (act === 'snext') { showScene(L, player.i + 1); }
+  else if (act === 'sprev') { showScene(L, player.i - 1); }
+  else if (act === 'splay') {
+    if (player.i === L.scenes.length - 1 && !player.playing) { player.playing = true; showScene(L, 0); }
+    else { player.playing = !player.playing; showScene(L, player.i); }
+  }
+  else if (act === 'sreplay') { player.playing = true; showScene(L, 0); }
+});
+$('menuBtn').addEventListener('click', () => { $('rail').classList.contains('open') ? closeRail() : openRail(); });
+$('closeRail').addEventListener('click', closeRail);
+$('themeBtn').addEventListener('click', toggleTheme);
+$('resetBtn').addEventListener('click', () => {
+  if (!window.confirm('Reset all progress and quiz scores?')) return;
+  state = { cur: 0, tab: 'learn', done: {}, best: {} };
+  Object.keys(quizRun).forEach((k) => delete quizRun[k]);
+  saveState(); renderAll();
+});
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeRail(); });
+
+/* ---------- boot ---------- */
+(function boot() {
+  try { const t = localStorage.getItem(KEY + '-theme'); if (t) applyTheme(t); } catch (e) { /* ignore */ }
+  if (state.cur >= allItems().length) state.cur = 0;
+  renderAll();
+})();
+</script>
+</body>
+</html>
